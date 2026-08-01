@@ -15,6 +15,10 @@ const yumemoriView = document.getElementById("yumemoriView");
 const yumemoriReturn = document.querySelector(".yumemori-return");
 
 let journeyHasBegun = false;
+let guideMotionStartedAt = performance.now();
+let guideFireflies = [];
+let guideFireflyMobileMode = null;
+let swarmRevealStartedAt = Number.NEGATIVE_INFINITY;
 
 const returnParams = new URLSearchParams(window.location.search);
 const isReturningFromYumemori =
@@ -25,8 +29,10 @@ function restoreCompletedJourney() {
     if (!isReturningFromYumemori) return;
 
     journeyHasBegun = true;
+    startGuideAnimation();
     document.body.classList.remove("journey-locked");
-    document.body.classList.add("journey-started", "journey-restored");
+    document.body.classList.add("journey-started", "journey-restored", "journey-stone");
+    swarmRevealStartedAt = performance.now() - 6000;
     beginButton?.setAttribute("disabled", "");
     beginButton?.classList.add("is-leaving");
 
@@ -79,9 +85,11 @@ beginButton?.addEventListener("click", () => {
 
     fadeInMusic();
     document.body.classList.remove("journey-locked");
-    document.body.classList.add("journey-started");
+    document.body.classList.add("journey-started", "journey-stone");
+    swarmRevealStartedAt = performance.now();
     guideLight?.classList.add("is-arriving");
     updateGuideLight();
+    startGuideAnimation();
 
     window.setTimeout(() => {
         firstSection?.classList.add("is-visible");
@@ -145,6 +153,77 @@ function smoothStep(amount) {
     return value * value * (3 - 2 * value);
 }
 
+
+function seededRange(seed, minimum, maximum) {
+    const value = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+    const normalized = value - Math.floor(value);
+    return minimum + (maximum - minimum) * normalized;
+}
+
+function buildGuideFireflySwarm() {
+    if (!guideLight) return;
+
+    const mobileMode = window.matchMedia("(max-width: 700px)").matches;
+    if (guideFireflies.length && guideFireflyMobileMode === mobileMode) return;
+
+    guideLight.querySelectorAll(".guide-firefly").forEach((firefly) => firefly.remove());
+    guideFireflies = [];
+    guideFireflyMobileMode = mobileMode;
+
+    const count = mobileMode ? 5 : 8;
+
+    for (let index = 0; index < count; index += 1) {
+        const element = document.createElement("span");
+        element.className = "guide-firefly";
+        element.setAttribute("aria-hidden", "true");
+
+        const firefly = {
+            element,
+            radiusX: seededRange(index + 1, mobileMode ? 24 : 34, mobileMode ? 54 : 88),
+            radiusY: seededRange(index + 11, mobileMode ? 18 : 26, mobileMode ? 44 : 68),
+            speedX: seededRange(index + 21, 0.34, 0.78),
+            speedY: seededRange(index + 31, 0.28, 0.72),
+            phaseX: seededRange(index + 41, 0, Math.PI * 2),
+            phaseY: seededRange(index + 51, 0, Math.PI * 2),
+            flutterSpeed: seededRange(index + 61, 1.1, 2.25),
+            flutterPhase: seededRange(index + 71, 0, Math.PI * 2),
+            peelStrength: index === 0 ? (mobileMode ? 18 : 34) : seededRange(index + 81, 2, 13),
+            peelSpeed: index === 0 ? 0.105 : seededRange(index + 91, 0.12, 0.24),
+            size: seededRange(index + 101, mobileMode ? 3.1 : 3.5, mobileMode ? 5.2 : 6.5),
+            baseOpacity: seededRange(index + 111, 0.38, 0.82),
+            glow: seededRange(index + 121, 8, 18)
+        };
+
+        element.style.setProperty("--firefly-size", `${firefly.size.toFixed(2)}px`);
+        element.style.setProperty("--firefly-glow", `${firefly.glow.toFixed(2)}px`);
+        guideLight.appendChild(element);
+        guideFireflies.push(firefly);
+    }
+}
+
+function updateGuideFireflySwarm(elapsed, leaderOpacity) {
+    if (!guideFireflies.length) buildGuideFireflySwarm();
+
+    guideFireflies.forEach((firefly, index) => {
+        const slowX = Math.sin(elapsed * firefly.speedX + firefly.phaseX);
+        const slowY = Math.cos(elapsed * firefly.speedY + firefly.phaseY);
+        const flutter = Math.sin(elapsed * firefly.flutterSpeed + firefly.flutterPhase);
+        const peelEnvelope = Math.max(0, Math.sin(elapsed * firefly.peelSpeed + firefly.phaseX));
+        const peel = Math.pow(peelEnvelope, index === 0 ? 10 : 18) * firefly.peelStrength;
+
+        const x = slowX * firefly.radiusX + flutter * 5 + peel;
+        const y = slowY * firefly.radiusY + Math.cos(elapsed * 1.37 + firefly.flutterPhase) * 4 - peel * 0.28;
+        const pulse = 0.72 + 0.28 * Math.sin(elapsed * (1.25 + index * 0.07) + firefly.phaseY);
+        const revealDelay = 1500 + index * 180;
+        const revealProgress = smoothStep((performance.now() - swarmRevealStartedAt - revealDelay) / 1800);
+        const opacity = Math.max(0, Math.min(1, firefly.baseOpacity * pulse * Math.min(1, leaderOpacity * 1.35) * revealProgress));
+
+        firefly.element.style.setProperty("--firefly-x", `${x.toFixed(2)}px`);
+        firefly.element.style.setProperty("--firefly-y", `${y.toFixed(2)}px`);
+        firefly.element.style.setProperty("--firefly-opacity", opacity.toFixed(3));
+    });
+}
+
 function updateGuideLight() {
     if (!guideLight || !journeyHasBegun) return;
 
@@ -167,26 +246,61 @@ function updateGuideLight() {
 
     let start = waypoints[0];
     let end = waypoints[waypoints.length - 1];
+    let segmentIndex = 0;
 
     for (let index = 0; index < waypoints.length - 1; index += 1) {
         if (progress >= waypoints[index].progress && progress <= waypoints[index + 1].progress) {
             start = waypoints[index];
             end = waypoints[index + 1];
+            segmentIndex = index;
             break;
         }
     }
 
     const range = Math.max(end.progress - start.progress, 0.001);
-    const localProgress = smoothStep((progress - start.progress) / range);
-    const x = mix(start.x, end.x, localProgress);
-    const y = mix(start.y, end.y, localProgress);
+    const rawLocalProgress = Math.max(0, Math.min(1, (progress - start.progress) / range));
+
+    // The guide still follows the visitor's scroll, but it never travels in a
+    // perfectly straight UI-like line. Each leg bows gently like a firefly
+    // finding its own way to the next resting place.
+    const localProgress = smoothStep(rawLocalProgress);
+    const baseX = mix(start.x, end.x, localProgress);
+    const baseY = mix(start.y, end.y, localProgress);
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    const distance = Math.max(Math.hypot(dx, dy), 1);
+    const perpendicularX = -dy / distance;
+    const perpendicularY = dx / distance;
+    const curveDirection = segmentIndex % 2 === 0 ? 1 : -1;
+    const curveStrength = Math.min(72, Math.max(24, distance * 0.12));
+    const curveEnvelope = Math.sin(Math.PI * rawLocalProgress);
+
+    // Layered, unequal rhythms prevent a repeating mechanical bob. The
+    // movement is deliberately exaggerated for the v1.1 development pass.
+    const elapsed = (performance.now() - guideMotionStartedAt) / 1000;
+    const wanderEnvelope = 0.35 + curveEnvelope * 0.65;
+    const wanderX = (
+        Math.sin(elapsed * 0.91 + segmentIndex * 1.7) * 13 +
+        Math.sin(elapsed * 0.37 + 1.2) * 8 +
+        Math.cos(elapsed * 1.63 + segmentIndex) * 4
+    ) * wanderEnvelope;
+    const wanderY = (
+        Math.cos(elapsed * 0.73 + segmentIndex * 1.1) * 11 +
+        Math.sin(elapsed * 0.29 + 2.4) * 7 +
+        Math.sin(elapsed * 1.41) * 3
+    ) * wanderEnvelope;
+
+    const x = baseX + perpendicularX * curveStrength * curveEnvelope * curveDirection + wanderX;
+    const y = baseY + perpendicularY * curveStrength * curveEnvelope * curveDirection + wanderY;
     const opacity = mix(start.opacity, end.opacity, localProgress);
-    const scale = mix(start.scale, end.scale, localProgress);
+    const breathingScale = 1 + Math.sin(elapsed * 1.17) * 0.055 + Math.sin(elapsed * 0.43 + 1.8) * 0.025;
+    const scale = mix(start.scale, end.scale, localProgress) * breathingScale;
 
     guideLight.style.setProperty("--guide-x", `${x}px`);
     guideLight.style.setProperty("--guide-y", `${y}px`);
     guideLight.style.setProperty("--guide-opacity", opacity.toFixed(3));
     guideLight.style.setProperty("--guide-scale", scale.toFixed(3));
+    updateGuideFireflySwarm(elapsed, opacity);
 
     if (worldGate) {
         worldGate.classList.toggle("is-awake", progress >= 0.955);
@@ -194,8 +308,26 @@ function updateGuideLight() {
 }
 
 let guideFrameRequested = false;
+let guideAnimationFrame = 0;
+
+function animateGuideLight() {
+    if (!journeyHasBegun || document.hidden) {
+        guideAnimationFrame = 0;
+        return;
+    }
+
+    updateGuideLight();
+    guideAnimationFrame = requestAnimationFrame(animateGuideLight);
+}
+
+function startGuideAnimation() {
+    if (guideAnimationFrame || !journeyHasBegun || document.hidden) return;
+    guideMotionStartedAt = performance.now();
+    guideAnimationFrame = requestAnimationFrame(animateGuideLight);
+}
 
 function requestGuideUpdate() {
+    if (guideAnimationFrame) return;
     if (guideFrameRequested) return;
 
     guideFrameRequested = true;
@@ -206,7 +338,12 @@ function requestGuideUpdate() {
 }
 
 window.addEventListener("scroll", requestGuideUpdate, { passive: true });
-window.addEventListener("resize", requestGuideUpdate);
+window.addEventListener("resize", () => {
+    buildGuideFireflySwarm();
+    requestGuideUpdate();
+});
+
+buildGuideFireflySwarm();
 
 window.addEventListener("load", () => {
     if (isReturningFromYumemori) {
@@ -301,8 +438,14 @@ function resumeJourneyAfterBackground() {
 // Pause while the visitor views another tab or webpage and resume at the same
 // timestamp when they return. Do not rewind the soundtrack.
 document.addEventListener("visibilitychange", () => {
-    if (document.hidden) pauseJourneyForBackground();
-    else resumeJourneyAfterBackground();
+    if (document.hidden) {
+        pauseJourneyForBackground();
+        if (guideAnimationFrame) cancelAnimationFrame(guideAnimationFrame);
+        guideAnimationFrame = 0;
+    } else {
+        resumeJourneyAfterBackground();
+        startGuideAnimation();
+    }
 });
 
 window.addEventListener("pagehide", () => {

@@ -191,6 +191,81 @@ body::before {
     to { transform: translate3d(0.45%, -0.3%, 0) scale(1.008); }
 }
 
+
+/* =====================================================
+   SPRINT 1 — STONE THRESHOLD
+   The opening warms like sunset, then settles into a pale
+   Yumemori green. The lead spirit remains unchanged; only
+   its companions reveal themselves during the crossing.
+   ===================================================== */
+body.journey-stone {
+    animation: stone-threshold-background 6s var(--ease-drift) forwards;
+}
+
+body.journey-stone::before {
+    animation:
+        paper-breath 22s ease-in-out infinite alternate,
+        stone-threshold-light 6s var(--ease-drift) forwards;
+}
+
+@keyframes stone-threshold-background {
+    0% {
+        background-color: #f7f5f0;
+    }
+    42% {
+        background-color: #f0dfbc;
+    }
+    68% {
+        background-color: #eee3c6;
+    }
+    84% {
+        background-color: #dfe3c9;
+    }
+    100% {
+        background-color: #dbe6d7;
+    }
+}
+
+@keyframes stone-threshold-light {
+    0% {
+        background:
+            radial-gradient(circle at 26% 34%, rgba(255,255,255,0.28), transparent 31%),
+            radial-gradient(circle at 74% 68%, rgba(105,121,89,0.035), transparent 36%);
+        opacity: 1;
+    }
+    46% {
+        background:
+            radial-gradient(circle at 34% 28%, rgba(255,224,159,0.44), transparent 38%),
+            radial-gradient(circle at 77% 72%, rgba(188,141,87,0.16), transparent 43%);
+        opacity: 1;
+    }
+    78% {
+        background:
+            radial-gradient(circle at 43% 35%, rgba(245,228,174,0.24), transparent 39%),
+            radial-gradient(circle at 72% 66%, rgba(103,132,89,0.15), transparent 44%);
+        opacity: 1;
+    }
+    100% {
+        background:
+            radial-gradient(circle at 29% 31%, rgba(255,255,244,0.20), transparent 34%),
+            radial-gradient(circle at 74% 68%, rgba(87,120,79,0.12), transparent 42%);
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.journey-stone {
+        animation-duration: 0.01ms;
+    }
+
+    body.journey-stone::before {
+        animation: none;
+        background:
+            radial-gradient(circle at 29% 31%, rgba(255,255,244,0.20), transparent 34%),
+            radial-gradient(circle at 74% 68%, rgba(87,120,79,0.12), transparent 42%);
+    }
+}
+
 button,
 input,
 textarea,
@@ -507,6 +582,18 @@ body.journey-locked .story-section {
         );
 }
 
+body.journey-stone .threshold-section {
+    background:
+        linear-gradient(
+            to bottom,
+            #dbe6d7 0%,
+            #d9e4d4 18%,
+            #d2dfcc 38%,
+            #bdd0b5 67%,
+            #8fa98b 100%
+        );
+}
+
 .threshold-section::before {
     content: "";
     position: absolute;
@@ -686,12 +773,12 @@ body.journey-locked .story-section {
 .guide-light {
     --guide-x: 50vw;
     --guide-y: 50vh;
-    --guide-scale: 0.72;
+    --guide-scale: 0.92;
     position: fixed;
     z-index: 20;
     top: 0;
     left: 0;
-    width: clamp(22px, 2.5vw, 34px);
+    width: clamp(30px, 3.25vw, 46px);
     aspect-ratio: 1;
     border-radius: 50%;
     pointer-events: none;
@@ -738,6 +825,45 @@ body.journey-locked .story-section {
     animation: guide-wisp 5.4s ease-in-out infinite;
 }
 
+
+
+/* Companion fireflies travel with the guide while keeping their own motion. */
+.guide-firefly {
+    --firefly-x: 0px;
+    --firefly-y: 0px;
+    --firefly-size: 5px;
+    --firefly-opacity: 0.7;
+    --firefly-glow: 12px;
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    width: var(--firefly-size);
+    height: var(--firefly-size);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: var(--firefly-opacity);
+    transform: translate(-50%, -50%) translate3d(var(--firefly-x), var(--firefly-y), 0);
+    background: radial-gradient(circle,
+        rgba(255, 252, 214, 1) 0%,
+        rgba(247, 229, 139, 0.88) 32%,
+        rgba(217, 205, 122, 0.28) 62%,
+        transparent 78%
+    );
+    box-shadow:
+        0 0 calc(var(--firefly-glow) * 0.45) rgba(255, 242, 171, 0.72),
+        0 0 var(--firefly-glow) rgba(229, 214, 132, 0.42);
+    will-change: transform, opacity;
+}
+
+.guide-firefly::after {
+    content: "";
+    position: absolute;
+    inset: -110%;
+    border-radius: inherit;
+    background: radial-gradient(circle, rgba(250, 235, 157, 0.18), transparent 68%);
+}
+
 body.journey-started .guide-light {
     opacity: var(--guide-opacity, 0);
 }
@@ -747,16 +873,12 @@ body.journey-started .guide-light {
 }
 
 @keyframes guide-light-breathe {
-    0%,
-    100% {
-        transform: scale(0.88);
-        opacity: 0.45;
-    }
-
-    50% {
-        transform: scale(1.2);
-        opacity: 0.85;
-    }
+    0%   { transform: scale(0.86); opacity: 0.42; }
+    18%  { transform: scale(1.08); opacity: 0.76; }
+    37%  { transform: scale(0.97); opacity: 0.58; }
+    61%  { transform: scale(1.24); opacity: 0.90; }
+    79%  { transform: scale(1.02); opacity: 0.66; }
+    100% { transform: scale(0.86); opacity: 0.42; }
 }
 
 @keyframes guide-wisp {
@@ -771,7 +893,7 @@ body.journey-started .guide-light {
 @media (max-width: 700px) {
 
     .guide-light {
-        width: 24px;
+        width: 32px;
     }
     .story-section {
         padding-right: 20px;

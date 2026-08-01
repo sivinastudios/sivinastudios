@@ -272,8 +272,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .reader-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(13, 7, 3, .58);
-    backdrop-filter: blur(3px) saturate(.9);
+    background: transparent;
+    backdrop-filter: none;
 }
 .journal-stage {
     position: relative;
@@ -295,7 +295,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
     position: relative;
     width: min(92vw, 1080px);
     aspect-ratio: 4 / 3;
-    filter: drop-shadow(0 32px 38px rgba(0,0,0,.58));
+    filter: none;
     transform-style: preserve-3d;
     perspective: 1300px;
 }
@@ -307,6 +307,144 @@ button, a { -webkit-tap-highlight-color: transparent; }
     border-radius: 2px;
     user-select: none;
     transition: opacity .28s ease, transform .55s cubic-bezier(.55,.02,.3,1);
+}
+
+/* ==========================================================
+   Sprint 2 — PAGE 1
+   Memory: "I woke up."
+   Living Memory: Dust
+   ========================================================== */
+
+.page-one-light {
+    display: none;
+}
+
+.page-one-dust {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .75s ease;
+    z-index: 2;
+    border-radius: 2px;
+    mix-blend-mode: screen;
+}
+
+.page-frame.page-one-living .page-one-dust {
+    opacity: 1;
+}
+
+.page-frame.page-one-living .journal-page {
+    animation: page-one-paper-settle 29s ease-in-out infinite;
+}
+
+.page-zone,
+.choice-zone {
+    z-index: 4;
+}
+
+/* ==========================================================
+   Sprint 2 — PAGE 2
+   Memory: "I found water. Is... it... singing?"
+   Living Illustration: the stream ink remembers how it moved.
+   ========================================================== */
+
+.page-two-water-glow {
+    display: none;
+}
+
+.page-two-water,
+.page-three-tree,
+.page-three-pollen {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .28s ease;
+    z-index: 2;
+}
+
+.page-two-water {
+    mix-blend-mode: normal;
+}
+
+.page-frame.page-two-living .page-two-water,
+.page-frame.page-three-living .page-three-tree,
+.page-frame.page-three-living .page-three-pollen {
+    opacity: 1;
+}
+
+.page-frame.page-two-living .journal-page {
+    animation: page-two-paper-settle 31s ease-in-out infinite;
+}
+
+/* ==========================================================
+   Sprint 2 — PAGE 3
+   Memory: "The silence here is unlike anything I've ever known."
+   Living Illustration: visible pollen suspended in remembered light.
+   The light itself has no hard-edged overlay.
+   ========================================================== */
+
+.page-three-sunbeam {
+    display: none;
+}
+
+.page-three-tree {
+    z-index: 2;
+    mix-blend-mode: normal;
+}
+
+.page-three-pollen {
+    z-index: 3;
+    mix-blend-mode: screen;
+}
+
+.page-frame.page-three-living .journal-page {
+    animation: page-three-paper-settle 38s ease-in-out infinite,
+               page-three-paper-warmth 8.5s ease-in-out infinite alternate;
+}
+
+@keyframes page-three-paper-warmth {
+    0% { filter: sepia(.03) brightness(.99) saturate(1); }
+    48% { filter: sepia(.10) brightness(1.055) saturate(1.06); }
+    100% { filter: sepia(.045) brightness(1.015) saturate(1.02); }
+}
+
+@keyframes page-three-paper-settle {
+    0%, 46%, 100% { transform: translate3d(0,0,0) rotate(0deg); }
+    49% { transform: translate3d(.34px,-.18px,0) rotate(.018deg); }
+    52% { transform: translate3d(0,0,0) rotate(0deg); }
+    83% { transform: translate3d(0,0,0) rotate(0deg); }
+    86% { transform: translate3d(-.28px,.16px,0) rotate(-.015deg); }
+    89% { transform: translate3d(0,0,0) rotate(0deg); }
+}
+
+@keyframes page-two-paper-settle {
+    0%, 38%, 100% { transform: translate3d(0,0,0) rotate(0deg); }
+    41% { transform: translate3d(-.55px,.25px,0) rotate(-.03deg); }
+    44% { transform: translate3d(0,0,0) rotate(0deg); }
+    78% { transform: translate3d(0,0,0) rotate(0deg); }
+    81% { transform: translate3d(.45px,-.25px,0) rotate(.026deg); }
+    84% { transform: translate3d(0,0,0) rotate(0deg); }
+}
+
+@keyframes page-one-light-breathe {
+    0% { opacity: .66; filter: brightness(.95) saturate(.92); transform: translate3d(-.25%, .15%, 0) scale(1.008); }
+    34% { opacity: .94; filter: brightness(1.07) saturate(1.04); }
+    67% { opacity: .74; filter: brightness(.99) saturate(.96); transform: translate3d(.3%, -.2%, 0) scale(1.015); }
+    100% { opacity: 1; filter: brightness(1.10) saturate(1.02); transform: translate3d(.05%, -.35%, 0) scale(1.01); }
+}
+@keyframes page-one-paper-settle {
+    0%, 31%, 100% { transform: translate3d(0,0,0) rotate(0deg); }
+    34% { transform: translate3d(.7px,-.4px,0) rotate(.045deg); }
+    37% { transform: translate3d(.2px,0,0) rotate(.012deg); }
+    68% { transform: translate3d(0,0,0) rotate(0deg); }
+    71% { transform: translate3d(-.6px,.35px,0) rotate(-.038deg); }
+    75% { transform: translate3d(0,0,0) rotate(0deg); }
 }
 .page-frame.is-turning-forward .journal-page { opacity: .08; transform: perspective(1200px) rotateY(-18deg) translateX(-2%); transform-origin: left center; }
 .page-frame.is-turning-back .journal-page { opacity: .08; transform: perspective(1200px) rotateY(18deg) translateX(2%); transform-origin: right center; }
@@ -500,4 +638,13 @@ button, a { -webkit-tap-highlight-color: transparent; }
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     .arrival-curtain { display: none; }
     .whisper-spirit { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-one-light,
+    .page-two-water-glow,
+    .page-three-sunbeam,
+    .page-frame.page-one-living .journal-page,
+    .page-frame.page-two-living .journal-page,
+    .page-frame.page-three-living .journal-page { animation: none !important; }
 }
