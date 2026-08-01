@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sivina Studios</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="journey-locked">
+
+    <main id="sivinaHome">
+
+        <section class="intro">
+
+            <img
+                class="master-emblem"
+                src="Images/master-emblem.png"
+                alt="Sivina Studios master emblem"
+            >
+
+            <div class="studio-name">
+                <h1>Sivina Studios</h1>
+                <p>We create worlds worth remembering</p>
+            </div>
+
+            <button
+    id="beginJourney"
+    class="journey-button"
+    aria-label="Begin the Journey"
+>
+    <img
+        src="Images/begin-the-journey.png"
+        alt=""
+        class="journey-button-image"
+    >
+</button>
+
+        </section>
+
+        <section id="firstSection" class="story-section philosophy-section">
+
+    <div class="story-content philosophy-content">
+
+        <h2>
+            We believe the worlds we remember most...
+            <span>are the ones that remembered us</span>
+        </h2>
+
+    </div>
+
+</section>
+
+<section class="story-section experience-section">
+
+    <div class="story-content experience-content">
+
+        <p class="eyebrow">Sivina Studios</p>
+
+        <h2>An experience studio</h2>
+
+        <p class="experience-statement">
+            We create worlds born from dreams, memories, wonder,
+            and the quiet feeling of discovering somewhere that
+            has been waiting for you
+        </p>
+
+        <p class="handwritten-note">
+            Some places are not invented<br>
+            They are remembered
+        </p>
+
+    </div>
+
+</section>
+
+<section id="threshold" class="story-section threshold-section">
+
+    <div class="threshold-background" aria-hidden="true"></div>
+
+    <div class="story-content threshold-content">
+
+        <p class="threshold-eyebrow">
+            Beyond this point...
+        </p>
+
+        <h2>
+            Some worlds are not entered
+            <span>They remember you</span>
+        </h2>
+
+        <div class="threshold-light" aria-hidden="true"></div>
+
+        <p class="threshold-invitation">
+            Sivina welcomes you to Yumemori
+        </p>
+
+        <a class="world-gate" href="cottage.html" aria-label="Enter Yumemori">
+            <span class="world-gate-light-well" aria-hidden="true"></span>
+            <img src="assets/primary.png" alt="Enter Yumemori" class="world-gate-emblem" onerror="this.onerror=null;this.src='Images/master-emblem.png';">
+            <span>Enter Yumemori</span>
+        </a>
+
+    </div>
+
+</section>
+
+    </main>
+
+    <section id="yumemoriView" class="yumemori-view" aria-labelledby="yumemoriTitle" hidden>
+        <div class="yumemori-haze" aria-hidden="true"></div>
+        <div class="yumemori-floor" aria-hidden="true"></div>
+
+        <div class="yumemori-arrival">
+            <p class="yumemori-eyebrow">A world remembered by Sivina Studios</p>
+            <h2 id="yumemoriTitle">Yumemori</h2>
+            <p class="yumemori-line">A place that remembers kindness.</p>
+            <div class="yumemori-memory-light" aria-hidden="true"></div>
+            <p class="yumemori-note">
+                <strong>The first remembered world</strong>
+                The forest is listening.<br>
+                Walk gently. Yumemori remembers kindness.
+            </p>
+            <a href="index.html?return=1#threshold" class="yumemori-return">Return to Sivina</a>
+        </div>
+    </section>
+
+    <div class="guide-light" aria-hidden="true"></div>
+
+    <audio id="journeyMusic" preload="auto">
+    <source src="audio/begin-the-journey.mp3" type="audio/mpeg">
+</audio>
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

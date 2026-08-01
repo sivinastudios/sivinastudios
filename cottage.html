@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#170f0a">
+    <title>Sawa's Cottage | Sivina Studios</title>
+    <link rel="stylesheet" href="css/cottage.css">
+</head>
+<body>
+    <main class="cottage-scene" id="cottageScene" aria-label="Sawa's cottage journal desk">
+        <img class="cottage-background" src="assets/cottage/cottage-scene.png" alt="Sawa's warm cottage desk with a sealed journal">
+        <div class="scene-vignette" aria-hidden="true"></div>
+        <div class="ambient-dust" aria-hidden="true"></div>
+
+        <div class="candle-life" aria-hidden="true">
+            <span class="candle-aura"></span>
+            <span class="candle-flame"></span>
+        </div>
+
+        <div class="cup-steam" aria-hidden="true">
+            <span class="steam-wisp steam-wisp-one"></span>
+            <span class="steam-wisp steam-wisp-two"></span>
+            <span class="steam-wisp steam-wisp-three"></span>
+        </div>
+
+        <div class="spirit-motes" id="spiritMotes" aria-hidden="true"></div>
+        <img class="whisper-spirit" id="whisperSpirit" src="assets/cottage/whisper-transparent.png" alt="A small light drifting through the cottage">
+
+        <button class="journal-hotspot" id="journalButton" type="button" aria-label="Open Sawa's journal">
+            <span class="journal-glow" aria-hidden="true"></span>
+            <span class="journal-hint">Open</span>
+        </button>
+
+        <p class="quiet-prompt" id="quietPrompt" aria-live="polite">The light has found something.</p>
+
+        <section class="journal-reader" id="journalReader" aria-label="Sawa's journal" aria-hidden="true">
+            <div class="reader-backdrop" data-close-journal></div>
+            <div class="journal-stage" role="dialog" aria-modal="true" aria-label="Sawa's journal">
+                <button class="journal-close" id="journalClose" type="button" aria-label="Close the journal">×</button>
+
+                <div class="page-frame" id="pageFrame">
+                    <img class="journal-page" id="journalPage" src="assets/journal/1.png" alt="Sawa's journal, page 1">
+                    <button class="page-zone page-zone-left" id="pagePrevious" type="button" aria-label="Previous journal page"></button>
+                    <button class="page-zone page-zone-right" id="pageNext" type="button" aria-label="Next journal page"></button>
+
+                    <a class="choice-zone choice-spirit" id="choiceSpirit" href="whispers.html" aria-label="Follow the Spirit"></a>
+                    <a class="choice-zone choice-smile" id="choiceSmile" href="feed-smile.html" aria-label="Follow Smile"></a>
+                </div>
+
+                <div class="reader-controls" aria-label="Journal controls">
+                    <button id="previousButton" type="button">Back</button>
+                    <span id="pageCounter" aria-live="polite">1 / 9</span>
+                    <button id="nextButton" type="button">Turn page</button>
+                </div>
+            </div>
+        </section>
+
+        <div class="cinematic-bars" id="cinematicBars" aria-hidden="true">
+            <span class="cinematic-bar cinematic-bar-top"></span>
+            <span class="cinematic-bar cinematic-bar-bottom"></span>
+        </div>
+
+        <div class="arrival-curtain" aria-hidden="true"></div>
+
+        <audio id="forestAudio" preload="auto" loop>
+            <source src="assets/cottage/forest.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- Optional final audio files. Add these exact filenames later; the page works silently without them. -->
+        <audio id="pageTurnAudio" preload="auto" src="assets/cottage/page-turn.mp3"></audio>
+        <audio id="leatherAudio" preload="auto" src="assets/cottage/leather-creak.mp3"></audio>
+    </main>
+
+    <script src="js/cottage.js"></script>
+</body>
+</html>
