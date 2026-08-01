@@ -18,6 +18,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
     background: #100a06;
 }
 
+.scene-canvas {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
 .cottage-background {
     position: absolute;
     inset: 0;
@@ -445,11 +451,42 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 @media (max-width: 760px) {
-    .cottage-background { object-position: 53% center; }
-    .journal-hotspot { left: 50%; top: 51%; width: 51%; height: 29%; }
-    .whisper-spirit { width: clamp(66px, 18vw, 115px); }
-    .candle-life { left: 7.5%; top: 47%; }
-    .cup-steam { left: 67%; top: 46%; }
+    /* Preserve the finished desktop composition as one 1535 × 1024 canvas.
+       The softly blurred room behind it fills portrait screens without cropping
+       the journal scene itself. */
+    .cottage-scene::before {
+        content: "";
+        position: absolute;
+        inset: -5%;
+        background: linear-gradient(rgba(8, 5, 3, .34), rgba(8, 5, 3, .58)),
+                    url("../assets/cottage/cottage-scene.png") center / cover no-repeat;
+        filter: blur(18px) saturate(.72);
+        transform: scale(1.12);
+        opacity: .72;
+        pointer-events: none;
+    }
+
+    .scene-canvas {
+        inset: auto;
+        left: 50%;
+        top: 50%;
+        width: 100vw;
+        height: auto;
+        aspect-ratio: 1535 / 1024;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 42px rgba(0, 0, 0, .78);
+    }
+
+    .cottage-background {
+        object-fit: fill;
+        object-position: center;
+    }
+
+    .cup-steam {
+        width: clamp(48px, 9vw, 90px);
+        height: clamp(70px, 15vw, 125px);
+    }
+
     .cinematic-bar { height: clamp(28px, 6vh, 52px); }
     .quiet-prompt { bottom: 1.5%; font-size: .68rem; }
     .journal-stage { width: 100vw; }
