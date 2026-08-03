@@ -34,7 +34,40 @@ button, a { -webkit-tap-highlight-color: transparent; }
     user-select: none;
     pointer-events: none;
     transform: scale(1.015);
-    animation: room-breathe 18s ease-in-out infinite alternate;
+    animation: room-breathe 16s ease-in-out infinite alternate;
+}
+
+.window-light {
+    position: absolute;
+    z-index: 1;
+    inset: -8%;
+    pointer-events: none;
+    opacity: .34;
+    mix-blend-mode: screen;
+    background:
+        radial-gradient(ellipse at 18% 31%, rgba(255, 224, 157, .28), transparent 24%),
+        linear-gradient(112deg, transparent 7%, rgba(255, 205, 112, .11) 22%, transparent 45%);
+    filter: blur(9px);
+    transform-origin: 20% 28%;
+    animation: window-light-wander 11s ease-in-out infinite alternate;
+}
+
+.foliage-shadow {
+    position: absolute;
+    z-index: 2;
+    inset: -10%;
+    pointer-events: none;
+    opacity: .18;
+    mix-blend-mode: multiply;
+    background:
+        radial-gradient(ellipse at 7% 15%, rgba(23, 17, 9, .72) 0 3%, transparent 4%),
+        radial-gradient(ellipse at 12% 22%, rgba(23, 17, 9, .62) 0 4%, transparent 5%),
+        radial-gradient(ellipse at 19% 13%, rgba(23, 17, 9, .58) 0 3.5%, transparent 4.5%),
+        radial-gradient(ellipse at 26% 21%, rgba(23, 17, 9, .46) 0 4%, transparent 5%),
+        linear-gradient(108deg, transparent 4%, rgba(18, 12, 7, .17) 22%, transparent 38%);
+    filter: blur(7px);
+    transform-origin: 8% 10%;
+    animation: foliage-sway 13s ease-in-out infinite alternate;
 }
 
 .scene-vignette {
@@ -193,8 +226,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
     mix-blend-mode: screen;
     will-change: left, top, transform, opacity;
 }
-.whisper-spirit.is-traveling { animation: spirit-explore 15.8s cubic-bezier(.42,.04,.19,1) forwards; }
-.whisper-spirit.is-transforming { animation: spirit-transform 2.9s cubic-bezier(.22,.75,.18,1) forwards; }
+.whisper-spirit.is-traveling { animation: spirit-explore 6.35s cubic-bezier(.42,.04,.19,1) forwards; }
+.whisper-spirit.is-transforming { animation: spirit-transform 1.6s cubic-bezier(.22,.75,.18,1) forwards; }
 .whisper-spirit.is-hovering { left: 43.6%; top: 29%; opacity: 1; transform: scale(1.08); animation: spirit-hover 4.8s ease-in-out infinite; }
 
 .journal-hotspot {
@@ -271,6 +304,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
     background: #030201;
     animation: curtain-rise 7.4s cubic-bezier(.72,0,.16,1) forwards;
 }
+body.returning-to-journal .arrival-curtain,
+body.returning-to-journal .cinematic-bars { display: none; }
 
 .journal-reader {
     position: fixed;
@@ -691,6 +726,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
     from { transform: scale(1.015) translate3d(0,0,0); }
     to { transform: scale(1.035) translate3d(-.25%, -.2%, 0); }
 }
+@keyframes window-light-wander {
+    0% { opacity: .25; transform: translate3d(-1%, 1%, 0) rotate(-.4deg) scale(.98); }
+    42% { opacity: .39; }
+    64% { opacity: .3; }
+    100% { opacity: .42; transform: translate3d(1.4%, -.8%, 0) rotate(.7deg) scale(1.04); }
+}
+@keyframes foliage-sway {
+    0% { opacity: .14; transform: translate3d(-1.2%, 0, 0) rotate(-1deg) scale(1.01); }
+    48% { opacity: .22; }
+    100% { opacity: .16; transform: translate3d(1.5%, .8%, 0) rotate(1.2deg) scale(1.04); }
+}
 @keyframes dust-float {
     from { transform: translate3d(-2%, 2%, 0) rotate(0deg); }
     to { transform: translate3d(3%, -4%, 0) rotate(1deg); }
@@ -833,4 +879,63 @@ button, a { -webkit-tap-highlight-color: transparent; }
     .page-frame.page-three-living .journal-page,
     .page-frame.page-four-living .journal-page { animation: none !important; }
     .choice-zone, .choice-spark { animation: none !important; }
+}
+
+/* Follow the Spirit — quiet invitation transition */
+.spirit-invitation {
+    position: fixed;
+    z-index: 999;
+    inset: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    background: transparent;
+}
+.spirit-invitation.is-active { opacity: 1; visibility: visible; }
+.invitation-blur {
+    position: absolute;
+    inset: -5%;
+    background: rgba(16, 7, 25, .02);
+    backdrop-filter: blur(0);
+    transition: backdrop-filter 1.5s ease .55s, background 1.5s ease .55s;
+}
+.spirit-invitation.is-active .invitation-blur {
+    backdrop-filter: blur(11px) brightness(.58);
+    background: rgba(16, 7, 25, .42);
+}
+.invitation-eye {
+    position: absolute;
+    z-index: 2;
+    top: 47.5%;
+    width: clamp(28px, 3.2vw, 50px);
+    height: clamp(5px, .65vw, 10px);
+    border-radius: 50%;
+    opacity: 0;
+    background: #fff;
+    filter: blur(3px);
+    box-shadow: 0 0 15px 7px rgba(243, 230, 255, .95), 0 0 45px 16px rgba(165, 87, 225, .7);
+}
+.invitation-eye-left { left: calc(50% - clamp(42px, 4.8vw, 74px)); transform: rotate(-5deg); }
+.invitation-eye-right { right: calc(50% - clamp(42px, 4.8vw, 74px)); transform: rotate(5deg); }
+.spirit-invitation.is-active .invitation-eye { animation: invitation-eyes 1.7s ease .55s forwards; }
+.invitation-light {
+    position: absolute;
+    inset: -15%;
+    opacity: 0;
+    background: radial-gradient(circle at 50% 48%, rgba(246,235,255,.98), rgba(180,118,222,.88) 20%, rgba(86,39,119,.62) 48%, rgba(22,8,34,.96) 78%);
+}
+.spirit-invitation.is-active .invitation-light { animation: invitation-fill 2.35s ease .72s forwards; }
+@keyframes invitation-eyes {
+    0%, 18% { opacity: 0; }
+    48%, 100% { opacity: 1; }
+}
+@keyframes invitation-fill {
+    0%, 38% { opacity: 0; transform: scale(.58); }
+    100% { opacity: 1; transform: scale(1); }
+}
+@media (max-width: 760px) {
+    .invitation-eye { top: 47%; width: 30px; height: 6px; }
+    .invitation-eye-left { left: calc(50% - 48px); }
+    .invitation-eye-right { right: calc(50% - 48px); }
 }

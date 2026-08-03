@@ -1,1 +1,88 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Feed Smile | Sivina Studios</title><style>html,body{height:100%;margin:0}body{display:grid;place-items:center;background:#17120e;color:#f0dec1;font-family:Georgia,serif;text-align:center}.mark{font-size:clamp(2rem,8vw,6rem);margin:0}.sub{opacity:.72;letter-spacing:.12em}.back{color:inherit;margin-top:2rem;display:inline-block}</style></head><body><main><p class="mark">Feed Smile</p><p class="sub">You chose to follow Smile first.</p><a class="back" href="cottage.html">Return to Sawa's cottage</a></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3bf73">
+  <title>The Garden of First Kindness | Sivina Studios</title>
+  <link rel="stylesheet" href="css/smile.css">
+</head>
+<body>
+  <main class="smile-experience" id="smileExperience">
+    <section class="garden-stage" id="gardenStage" aria-label="The Garden of First Kindness">
+      <div class="garden-world" id="gardenWorld">
+        <div class="garden-layer layer-far" data-travel="3"><img src="assets/smile/Far Background.png" alt="Golden mountains and a misty valley at sunrise"></div>
+        <div class="garden-layer layer-main" data-travel="10"><img src="assets/smile/Main Garden.png" alt="An enchanted garden with a great wisteria tree, bridge, stream, and waterfall"></div>
+        <div class="garden-layer layer-mid" data-travel="25"><img src="assets/smile/Main Garden.png" alt="The near garden path, flowers, and stream banks"></div>
+        <div class="garden-layer layer-left" data-travel="60"><img src="assets/smile/Left Foreground.png" alt="Close wisteria branches and flowers framing the garden"></div>
+        <div class="garden-layer layer-near" data-travel="90"><img src="assets/smile/Right Foreground.png" alt="Close flowers and water at the edge of the garden"></div>
+
+        <div class="sun-wash" aria-hidden="true"></div>
+        <div class="light-rays" aria-hidden="true"></div>
+        <canvas class="garden-life" id="gardenLife" aria-hidden="true"></canvas>
+        <div class="cursor-warmth" id="cursorWarmth" aria-hidden="true"></div>
+        <div class="edge-vignette" aria-hidden="true"></div>
+      </div>
+
+      <div class="garden-reveal" id="gardenReveal" aria-hidden="true">
+        <span class="reveal-flash"></span>
+        <span class="reveal-tree reveal-tree-left"></span>
+        <span class="reveal-tree reveal-tree-right"></span>
+      </div>
+
+      <div class="garden-intro" id="gardenIntro" aria-hidden="true">
+        <span class="intro-bloom"></span>
+        <span class="intro-petal p1"></span><span class="intro-petal p2"></span><span class="intro-petal p3"></span>
+        <span class="intro-petal p4"></span><span class="intro-petal p5"></span><span class="intro-petal p6"></span>
+      </div>
+
+      <div class="garden-title" id="gardenTitle">
+        <p>Somewhere in Yumemori</p>
+        <h1>The Garden of First Kindness</h1>
+      </div>
+
+      <p class="look-hint" id="lookHint">Move gently. The garden remembers you.</p>
+
+      <button class="meet-smile" id="meetSmile" type="button">
+        <span class="button-bloom" aria-hidden="true"></span>
+        <span>Meet Smile</span>
+      </button>
+
+      <button class="sound-toggle" id="soundToggle" type="button" aria-label="Toggle garden sound" aria-pressed="false">Sound</button>
+    </section>
+
+    <section class="smile-gallery" id="smileGallery" aria-labelledby="meetSmileHeading">
+      <div class="gallery-atmosphere" aria-hidden="true"></div>
+      <header class="gallery-heading">
+        <p class="eyebrow">A light that remembers kindness</p>
+        <h2 id="meetSmileHeading">Meet Smile</h2>
+        <p>The garden welcomed you first. Now meet the warmth that has always lived within it.</p>
+      </header>
+
+      <article class="hero-document" aria-labelledby="smileDocumentTitle">
+        <p class="document-kicker">Hero Document</p>
+        <h3 id="smileDocumentTitle">Meet Smile</h3>
+        <p class="document-opening"><em>Some lights exist only to be seen.</em><br><em>Others exist to help others see.</em></p>
+        <p><strong>Smile is the oldest light in Yumemori.</strong></p>
+        <p>Born from the very first act of kindness, Smile quietly wanders the forest, leaving warmth wherever it goes. It asks for nothing, speaks without words, and reminds every traveler that even the smallest act of compassion can change the path ahead.</p>
+        <p>Whether guiding someone who feels lost, celebrating moments of joy, or simply sharing a peaceful silence, Smile is never far away. The Garden of First Kindness is a reflection of its heart&mdash;a place where every flower, lantern, and gentle breeze remembers that kindness has the power to grow.</p>
+        <p class="document-welcome"><strong>Welcome home.</strong></p>
+      </article>
+
+      <div class="art-grid" aria-label="Smile concept artwork">
+        <a class="art-card portrait-art" href="smile-hero-sheet.html"><img src="assets/smile/Hero Sheet.png" alt="The Smile Hero Sheet"><span>Hero Sheet</span></a>
+        <a class="art-card portrait-art" href="smile-concept-art.html"><img src="assets/smile/Concept Art.png" alt="The Smile Concept Art"><span>Concept Art</span></a>
+        <a class="art-card" href="smile-overlook.html"><img src="assets/smile/The Overlook.png" alt="The Overlook"><span>The Overlook</span></a>
+        <a class="art-card" href="smile-states-emotions.html"><img src="assets/smile/States & Emotions.png" alt="Smile States and Emotions"><span>States &amp; Emotions</span></a>
+      </div>
+
+      <a class="return-journal" href="cottage.html#journal-9">Return to Sawa's journal</a>
+    </section>
+
+    <audio id="gardenAudio" preload="auto" loop>
+      <source src="audio/the-enchanted-return.wav" type="audio/wav">
+    </audio>
+  </main>
+  <script src="js/smile.js"></script>
+</body>
+</html>

@@ -15,6 +15,7 @@ const previousButton = document.getElementById("previousButton");
 const nextButton = document.getElementById("nextButton");
 const pageCounter = document.getElementById("pageCounter");
 const choiceSpirit = document.getElementById("choiceSpirit");
+const spiritInvitation = document.getElementById("spiritInvitation");
 const choiceSmile = document.getElementById("choiceSmile");
 const spiritMotes = document.getElementById("spiritMotes");
 const cinematicBars = document.getElementById("cinematicBars");
@@ -990,6 +991,7 @@ const pageSixMemorySystem = (() => {
 
 const totalPages = 9;
 let currentPage = 1;
+const resumeJournalAtPageNine = window.location.hash === "#journal-9";
 let isTurning = false;
 let touchStartX = null;
 
@@ -1149,18 +1151,18 @@ function beginSpiritSequence() {
 
     window.setTimeout(() => {
         whisperSpirit?.classList.add("is-traveling");
-    }, 900);
+    }, 350);
 
     // The bars arrive only after the spirit crosses the window threshold.
-    window.setTimeout(() => cinematicBars?.classList.add("is-active"), 3600);
+    window.setTimeout(() => cinematicBars?.classList.add("is-active"), 1600);
 
     // The journal senses the approaching spirit before contact.
-    window.setTimeout(() => journalButton?.classList.add("is-anticipating"), 15100);
+    window.setTimeout(() => journalButton?.classList.add("is-anticipating"), 5800);
 
     window.setTimeout(() => {
         whisperSpirit?.classList.remove("is-traveling");
         whisperSpirit?.classList.add("is-transforming");
-    }, 16700);
+    }, 6700);
 
     window.setTimeout(() => {
         whisperSpirit?.classList.remove("is-transforming");
@@ -1168,10 +1170,10 @@ function beginSpiritSequence() {
         journalButton?.classList.remove("is-anticipating");
         journalButton?.classList.add("is-ready");
         quietPrompt?.classList.add("is-visible");
-    }, 19600);
+    }, 8300);
 
     // Let the cinematic framing linger after the spirit settles.
-    window.setTimeout(() => cinematicBars?.classList.remove("is-active"), 20750);
+    window.setTimeout(() => cinematicBars?.classList.remove("is-active"), 9400);
 }
 
 function updatePageUI() {
@@ -1298,6 +1300,19 @@ window.addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft") turnTo(currentPage - 1, "back");
 });
 
+choiceSpirit?.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (spiritInvitation?.classList.contains("is-active")) return;
+    sessionStorage.setItem("forestAudioTime", String(forestAudio?.currentTime || 0));
+    forestAudio?.pause();
+    watersHumAudio?.pause();
+    rootHeartbeatAudio?.pause();
+    staticVeinsAudio?.pause();
+    spiritInvitation?.classList.add("is-active");
+    spiritInvitation?.setAttribute("aria-hidden", "false");
+    window.setTimeout(() => { window.location.href = choiceSpirit.href; }, 3000);
+});
+
 [choiceSpirit, choiceSmile].forEach((choice) => {
     choice?.addEventListener("pointerdown", () => {
         choice.classList.add("is-tapped");
@@ -1313,8 +1328,16 @@ window.addEventListener("keydown", (event) => {
 
 window.addEventListener("load", () => {
     startForest();
+    if (resumeJournalAtPageNine) {
+        document.body.classList.add("returning-to-journal");
+        currentPage = totalPages;
+        updatePageUI();
+        journalButton?.classList.add("is-ready");
+        window.setTimeout(openJournal, 80);
+        return;
+    }
     updatePageUI();
-    window.setTimeout(beginSpiritSequence, 5600);
+    window.setTimeout(beginSpiritSequence, 2200);
 });
 
 let forestWasPlayingBeforeHidden = false;

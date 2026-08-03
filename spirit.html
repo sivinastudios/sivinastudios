@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#080510">
+    <title>The Spirit | Sivina Studios</title>
+    <link rel="stylesheet" href="css/spirit.css">
+</head>
+<body>
+    <main class="spirit-page" id="spiritPage" aria-label="The Spirit — an introduction to Yumemori">
+        <div class="first-view" id="firstView">
+            <img class="first-view-background" id="firstViewBackground" src="assets/spirit/first-view-background.png" alt="A distant glimpse of Yumemori rising into sky, space, and time">
+            <img class="memory-shimmer" id="memoryShimmer" src="assets/spirit/memory-shimmer.png" alt="" aria-hidden="true">
+            <img class="light-beam" id="lightBeam" src="assets/spirit/light-beam.png" alt="" aria-hidden="true">
+            <img class="particle-field" id="particleField" src="assets/spirit/particles.png" alt="" aria-hidden="true">
+
+            <div class="hero-links" id="heroLinks" aria-label="Spirit reference material">
+                <button class="hero-card hero-document" type="button" data-panel="document">
+                    <span class="hero-card-kicker">The Spirit</span>
+                    <span class="hero-card-title">Hero Document</span>
+                    <span class="hero-card-note">Purpose, behavior, and design rules</span>
+                </button>
+                <button class="hero-card hero-concept" type="button" data-panel="concept">
+                    <span class="hero-card-kicker">The Spirit</span>
+                    <span class="hero-card-title">Hero Concept</span>
+                    <span class="hero-card-note">The first visions and visual language</span>
+                </button>
+            </div>
+
+            <section class="spirit-copy" id="spiritCopy" aria-labelledby="spiritHeading">
+                <p class="spirit-eyebrow">A first view</p>
+                <h1 id="spiritHeading">You have just experienced an introduction to Yumemori.</h1>
+                <p>Not a playable game. Not a demo.</p>
+                <p>A first step into one of the worlds being created by Sivina Studios.</p>
+                <p class="spirit-closing">Every world begins long before it can be placed, before it can be played.<br><strong>For Sivina, it begins with a feeling.</strong></p>
+            </section>
+
+            <p class="audio-prompt" id="audioPrompt" hidden>
+                <button type="button" id="beginSound">Listen, and enter the First View</button>
+            </p>
+
+            <a class="quiet-return" href="cottage.html#journal-9">Return to Sawa's journal</a>
+        </div>
+
+        <div class="reference-panel" id="referencePanel" aria-hidden="true">
+            <button class="panel-close" id="panelClose" type="button" aria-label="Close reference panel">×</button>
+            <article class="panel-content" id="documentPanel" hidden>
+                <p class="panel-eyebrow">Hero Document</p>
+                <h2>The Spirit</h2>
+                <p class="panel-lead">Not a guardian. Not a god. A presence.</p>
+                <p>The Spirit is attentive, patient, curious, gentle, and ancient. It does not command or perform. It notices, waits, invites, and reveals.</p>
+                <p><strong>The guiding rule:</strong> nothing moves unless it has a reason to.</p>
+                <p>Its body is memory, smoke, light, electricity, mist, and wind. Its eyes remain still; emotion is shown only through their brightness.</p>
+                <p>The Spirit belongs everywhere—Yumemori and beyond. Space and time are not a destination for it, but the condition in which it simply exists.</p>
+            </article>
+            <article class="panel-content" id="conceptPanel" hidden>
+                <p class="panel-eyebrow">Hero Concept</p>
+                <h2>The Spirit</h2>
+                <p class="concept-intro">Early concepts and explorations of the Spirit&mdash;a presence that exists within memory, space, and feeling. Select an artwork to enter the full exhibit.</p>
+                <div class="concept-gallery" aria-label="Spirit Hero Concept artwork">
+                    <a class="concept-card" href="hero-sheet.html">
+                        <img src="assets/spirit/hero-sheet.webp" alt="Hero Sheet artwork for the Spirit">
+                        <span>Hero Sheet</span>
+                    </a>
+                    <a class="concept-card" href="concept-art.html">
+                        <img src="assets/spirit/concept-art.webp" alt="Concept Art for the Spirit">
+                        <span>Concept Art</span>
+                    </a>
+                    <a class="concept-card" href="the-overlook.html">
+                        <img src="assets/spirit/the-overlook.webp" alt="The Overlook artwork for the Spirit">
+                        <span>The Overlook</span>
+                    </a>
+                    <a class="concept-card" href="states-emotions.html">
+                        <img src="assets/spirit/states-emotions.webp" alt="States and Emotions artwork for the Spirit">
+                        <span>States &amp; Emotions</span>
+                    </a>
+                </div>
+            </article>
+        </div>
+
+        <div class="arrival-veil" id="arrivalVeil" aria-hidden="true"></div>
+        <audio id="spiritAudio" preload="auto" loop>
+            <source src="audio/spirit-page.wav" type="audio/wav">
+        </audio>
+    </main>
+    <script src="js/spirit.js"></script>
+</body>
+</html>

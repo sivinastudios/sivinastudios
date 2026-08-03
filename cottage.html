@@ -11,6 +11,8 @@
     <main class="cottage-scene" id="cottageScene" aria-label="Sawa's cottage journal desk">
         <div class="scene-canvas">
         <img class="cottage-background" src="assets/cottage/cottage-scene.png" alt="Sawa's warm cottage desk with a sealed journal">
+        <div class="window-light" aria-hidden="true"></div>
+        <div class="foliage-shadow" aria-hidden="true"></div>
         <div class="scene-vignette" aria-hidden="true"></div>
         <div class="ambient-dust" aria-hidden="true"></div>
 
@@ -60,7 +62,7 @@
                     <button class="page-zone page-zone-right" id="pageNext" type="button" aria-label="Next journal page"></button>
 
                     <p class="choice-prompt" id="choicePrompt" aria-hidden="true">Choose your path.</p>
-                    <a class="choice-zone choice-spirit" id="choiceSpirit" href="whispers.html" aria-label="Follow the Spirit">
+                    <a class="choice-zone choice-spirit" id="choiceSpirit" href="spirit.html" aria-label="Follow the Spirit">
                         <span class="choice-spark choice-spark-one" aria-hidden="true"></span>
                         <span class="choice-spark choice-spark-two" aria-hidden="true"></span>
                         <span class="choice-spark choice-spark-three" aria-hidden="true"></span>
@@ -86,6 +88,13 @@
         </div>
 
         <div class="arrival-curtain" aria-hidden="true"></div>
+
+        <div class="spirit-invitation" id="spiritInvitation" aria-hidden="true">
+            <div class="invitation-blur"></div>
+            <span class="invitation-eye invitation-eye-left"></span>
+            <span class="invitation-eye invitation-eye-right"></span>
+            <span class="invitation-light"></span>
+        </div>
 
         <audio id="forestAudio" preload="auto" loop>
             <source src="assets/cottage/forest.mp3" type="audio/mpeg">
