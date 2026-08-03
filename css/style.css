@@ -2,9 +2,13 @@
     --paper: #f7f5f0;
     --ink: #2b2b2b;
     --muted-ink: #5c5a55;
-    --forest-ink: #263128;
-    --forest-muted: #566757;
-    --accent: #6d4b76;
+    --forest-ink: #2f2141;
+    --forest-muted: #725d86;
+    --accent: #75508f;
+    --sawa-violet-soft: #e9dff0;
+    --sawa-violet-mid: #b99bcb;
+    --sawa-violet-rich: #604174;
+    --sawa-violet-deep: #2b1c3a;
     --content-wide: 1100px;
     --content-reading: 760px;
     --ease-drift: cubic-bezier(0.22, 1, 0.36, 1);
@@ -193,36 +197,35 @@ body::before {
 
 
 /* =====================================================
-   SPRINT 1 — STONE THRESHOLD
-   The opening warms like sunset, then settles into a pale
-   Yumemori green. The lead spirit remains unchanged; only
-   its companions reveal themselves during the crossing.
+   SAWA PALETTE — STONE THRESHOLD
+   The white opening wakes quickly into the soft and deep
+   violets carried by Sawa's master emblem.
    ===================================================== */
 body.journey-stone {
-    animation: stone-threshold-background 6s var(--ease-drift) forwards;
+    animation: stone-threshold-background 3.8s var(--ease-drift) forwards;
 }
 
 body.journey-stone::before {
     animation:
         paper-breath 22s ease-in-out infinite alternate,
-        stone-threshold-light 6s var(--ease-drift) forwards;
+        stone-threshold-light 3.8s var(--ease-drift) forwards;
 }
 
 @keyframes stone-threshold-background {
     0% {
         background-color: #f7f5f0;
     }
-    42% {
-        background-color: #f0dfbc;
+    28% {
+        background-color: #f0eaf4;
     }
-    68% {
-        background-color: #eee3c6;
+    55% {
+        background-color: var(--sawa-violet-soft);
     }
-    84% {
-        background-color: #dfe3c9;
+    78% {
+        background-color: #cbb5d8;
     }
     100% {
-        background-color: #dbe6d7;
+        background-color: var(--sawa-violet-mid);
     }
 }
 
@@ -233,22 +236,22 @@ body.journey-stone::before {
             radial-gradient(circle at 74% 68%, rgba(105,121,89,0.035), transparent 36%);
         opacity: 1;
     }
-    46% {
+    38% {
         background:
-            radial-gradient(circle at 34% 28%, rgba(255,224,159,0.44), transparent 38%),
-            radial-gradient(circle at 77% 72%, rgba(188,141,87,0.16), transparent 43%);
+            radial-gradient(circle at 34% 28%, rgba(255,246,255,0.54), transparent 38%),
+            radial-gradient(circle at 77% 72%, rgba(194,150,218,0.20), transparent 43%);
         opacity: 1;
     }
-    78% {
+    70% {
         background:
-            radial-gradient(circle at 43% 35%, rgba(245,228,174,0.24), transparent 39%),
-            radial-gradient(circle at 72% 66%, rgba(103,132,89,0.15), transparent 44%);
+            radial-gradient(circle at 43% 35%, rgba(247,226,252,0.34), transparent 39%),
+            radial-gradient(circle at 72% 66%, rgba(116,74,143,0.19), transparent 44%);
         opacity: 1;
     }
     100% {
         background:
-            radial-gradient(circle at 29% 31%, rgba(255,255,244,0.20), transparent 34%),
-            radial-gradient(circle at 74% 68%, rgba(87,120,79,0.12), transparent 42%);
+            radial-gradient(circle at 29% 31%, rgba(255,244,255,0.25), transparent 34%),
+            radial-gradient(circle at 74% 68%, rgba(79,45,105,0.22), transparent 42%);
         opacity: 1;
     }
 }
@@ -261,8 +264,8 @@ body.journey-stone::before {
     body.journey-stone::before {
         animation: none;
         background:
-            radial-gradient(circle at 29% 31%, rgba(255,255,244,0.20), transparent 34%),
-            radial-gradient(circle at 74% 68%, rgba(87,120,79,0.12), transparent 42%);
+            radial-gradient(circle at 29% 31%, rgba(255,244,255,0.25), transparent 34%),
+            radial-gradient(circle at 74% 68%, rgba(79,45,105,0.22), transparent 42%);
     }
 }
 
@@ -576,9 +579,9 @@ body.journey-locked .story-section {
             to bottom,
             #f7f5f0 0%,
             #f3f1e9 16%,
-            #e4ebde 40%,
-            #c5d6bd 68%,
-            #8fa98b 100%
+            #eadff0 40%,
+            #b99bcb 68%,
+            #604174 100%
         );
 }
 
@@ -586,11 +589,11 @@ body.journey-stone .threshold-section {
     background:
         linear-gradient(
             to bottom,
-            #dbe6d7 0%,
-            #d9e4d4 18%,
-            #d2dfcc 38%,
-            #bdd0b5 67%,
-            #8fa98b 100%
+            #b99bcb 0%,
+            #ad8fc1 18%,
+            #9673ad 38%,
+            #785493 67%,
+            #3a2750 100%
         );
 }
 
@@ -599,9 +602,9 @@ body.journey-stone .threshold-section {
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(circle at 50% 76%, rgba(112, 151, 101, 0.62), transparent 42%),
-        radial-gradient(circle at 20% 65%, rgba(154, 183, 137, 0.36), transparent 35%),
-        radial-gradient(circle at 80% 58%, rgba(81, 123, 88, 0.32), transparent 38%);
+        radial-gradient(circle at 50% 76%, rgba(194, 148, 219, 0.58), transparent 42%),
+        radial-gradient(circle at 20% 65%, rgba(225, 197, 235, 0.34), transparent 35%),
+        radial-gradient(circle at 80% 58%, rgba(78, 43, 105, 0.38), transparent 38%);
     opacity: 0;
     transform: scale(1.08) translateY(24px);
     transition:
@@ -616,7 +619,7 @@ body.journey-stone .threshold-section {
     bottom: 0;
     left: 0;
     height: 35%;
-    background: linear-gradient(to top, rgba(53, 73, 53, 0.38), rgba(79, 105, 76, 0.12) 55%, transparent);
+    background: linear-gradient(to top, rgba(34, 20, 48, 0.52), rgba(89, 57, 112, 0.16) 55%, transparent);
     opacity: 0;
     transform: translateY(38px);
     transition:
@@ -642,7 +645,7 @@ body.journey-stone .threshold-section {
     opacity: 0;
     background-image:
         radial-gradient(circle at 30% 45%, rgba(255, 255, 255, 0.5), transparent 22%),
-        radial-gradient(circle at 70% 58%, rgba(232, 240, 222, 0.28), transparent 25%);
+        radial-gradient(circle at 70% 58%, rgba(239, 218, 247, 0.30), transparent 25%);
     filter: blur(12px);
     transform: translateY(34px);
     transition:
@@ -659,7 +662,7 @@ body.journey-stone .threshold-section {
     position: relative;
     z-index: 3;
     width: min(1000px, 88%);
-    color: #29332a;
+    color: #2f2141;
 }
 
 .threshold-eyebrow {
@@ -685,7 +688,7 @@ body.journey-stone .threshold-section {
 .threshold-content h2 span {
     display: block;
     margin-top: 0.25em;
-    color: #617363;
+    color: #553a6b;
     font-style: italic;
     opacity: 0;
     transform: translateY(22px);
@@ -702,8 +705,8 @@ body.journey-stone .threshold-section {
     background: radial-gradient(
         circle,
         rgba(244, 238, 174, 0.92) 0%,
-        rgba(196, 215, 157, 0.44) 30%,
-        rgba(146, 181, 124, 0.14) 56%,
+        rgba(224, 193, 238, 0.48) 30%,
+        rgba(146, 94, 177, 0.18) 56%,
         transparent 72%
     );
     opacity: 0;
@@ -717,7 +720,7 @@ body.journey-stone .threshold-section {
 
 .threshold-invitation {
     margin: 0 auto;
-    color: #4d6250;
+    color: #4e3562;
     font-family: "Segoe Print", "Bradley Hand", cursive;
     font-size: clamp(1.4rem, 2.4vw, 2.15rem);
     line-height: 1.5;
@@ -1386,7 +1389,7 @@ body.journey-restored .guide-light {
     opacity: 0;
 }
 
-/* One physical page-turn system: the current green threshold lifts from its
+/* One physical page-turn system: the current violet threshold lifts from its
    right edge and folds across the left-hand spine to reveal Yumemori. */
 .page-turn {
     position: fixed;
@@ -1421,8 +1424,8 @@ body.journey-restored .guide-light {
     backface-visibility: hidden;
     border-radius: 0 1.5% 1.5% 0 / 0 50% 50% 0;
     background:
-        radial-gradient(circle at 50% 68%, rgba(112,151,101,0.58), transparent 40%),
-        linear-gradient(to bottom, #f3f1e9 0%, #e4ebde 28%, #c5d6bd 58%, #8fa98b 100%);
+        radial-gradient(circle at 50% 68%, rgba(194,148,219,0.54), transparent 40%),
+        linear-gradient(to bottom, #f3edf6 0%, #e4d7eb 28%, #b99bcb 58%, #604174 100%);
     box-shadow: 28px 0 70px rgba(0,0,0,0.4);
 }
 
@@ -1434,7 +1437,7 @@ body.journey-restored .guide-light {
     width: 24%;
     height: 100%;
     opacity: 0;
-    background: linear-gradient(90deg, transparent, rgba(34,46,34,0.16) 62%, rgba(8,12,8,0.62));
+    background: linear-gradient(90deg, transparent, rgba(56,35,72,0.18) 62%, rgba(22,12,31,0.66));
 }
 
 .page-turn-back {

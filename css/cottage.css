@@ -357,7 +357,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .page-two-water,
 .page-three-tree,
-.page-three-pollen {
+.page-three-pollen,
+.page-four-memory,
+.page-five-memory,
+.page-six-memory {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -374,8 +377,41 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .page-frame.page-two-living .page-two-water,
 .page-frame.page-three-living .page-three-tree,
-.page-frame.page-three-living .page-three-pollen {
+.page-frame.page-three-living .page-three-pollen,
+.page-frame.page-four-living .page-four-memory,
+.page-frame.page-five-living .page-five-memory,
+.page-frame.page-six-living .page-six-memory {
     opacity: 1;
+}
+
+/* ==========================================================
+   PAGE 4 — "The trees... I think they know me."
+   Roots recognize Sawa; leaves rest in her words.
+   ========================================================== */
+
+.page-four-memory {
+    z-index: 3;
+    mix-blend-mode: normal;
+}
+
+.page-frame.page-four-living .journal-page {
+    animation: page-four-paper-breathe 18s ease-in-out infinite;
+}
+
+/* PAGE 5 — the cottage is quiet, but its fire is still tended. */
+.page-five-memory {
+    z-index: 3;
+    mix-blend-mode: normal;
+}
+
+.page-six-memory {
+    z-index: 3;
+    mix-blend-mode: screen;
+}
+
+@keyframes page-four-paper-breathe {
+    0%, 100% { filter: sepia(.025) brightness(1); }
+    50% { filter: sepia(.065) brightness(1.025) saturate(1.035); }
 }
 
 .page-frame.page-two-living .journal-page {
@@ -646,5 +682,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
     .page-three-sunbeam,
     .page-frame.page-one-living .journal-page,
     .page-frame.page-two-living .journal-page,
-    .page-frame.page-three-living .journal-page { animation: none !important; }
+    .page-frame.page-three-living .journal-page,
+    .page-frame.page-four-living .journal-page { animation: none !important; }
 }
