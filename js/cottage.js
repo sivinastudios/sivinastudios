@@ -1168,8 +1168,10 @@ function beginSpiritSequence() {
         journalButton?.classList.remove("is-anticipating");
         journalButton?.classList.add("is-ready");
         quietPrompt?.classList.add("is-visible");
-        cinematicBars?.classList.remove("is-active");
     }, 19600);
+
+    // Let the cinematic framing linger after the spirit settles.
+    window.setTimeout(() => cinematicBars?.classList.remove("is-active"), 20750);
 }
 
 function updatePageUI() {
@@ -1211,6 +1213,7 @@ function updatePageUI() {
     else stopStaticVeins();
 
     const isChoicePage = currentPage === totalPages;
+    pageFrame.classList.toggle("choice-page-active", isChoicePage);
     choiceSpirit.classList.toggle("is-visible", isChoicePage);
     choiceSmile.classList.toggle("is-visible", isChoicePage);
 }
@@ -1296,6 +1299,13 @@ window.addEventListener("keydown", (event) => {
 });
 
 [choiceSpirit, choiceSmile].forEach((choice) => {
+    choice?.addEventListener("pointerdown", () => {
+        choice.classList.add("is-tapped");
+    });
+    choice?.addEventListener("pointerup", () => {
+        window.setTimeout(() => choice.classList.remove("is-tapped"), 180);
+    });
+    choice?.addEventListener("pointercancel", () => choice.classList.remove("is-tapped"));
     choice?.addEventListener("click", () => {
         sessionStorage.setItem("forestAudioTime", String(forestAudio?.currentTime || 0));
     });
