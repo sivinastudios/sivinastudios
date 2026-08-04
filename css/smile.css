@@ -25,3 +25,18 @@ button,a{font:inherit}.smile-experience{min-height:100vh}
 @keyframes introFade{0%,42%{opacity:1}100%{opacity:0;visibility:hidden}}@keyframes burst{0%{transform:scale(.15);opacity:1}58%{transform:scale(1.2);opacity:1}100%{transform:scale(1.75);opacity:0}}@keyframes welcomeFlash{0%,20%{opacity:1}100%{opacity:0}}@keyframes treesPartLeft{0%,14%{transform:translateX(0) scale(1.04)}100%{transform:translateX(-93%) scale(1.13)}}@keyframes treesPartRight{0%,14%{transform:translateX(0) scale(1.04)}100%{transform:translateX(93%) scale(1.13)}}@keyframes revealComplete{0%,98%{visibility:visible}100%{visibility:hidden}}@keyframes sunBreathe{50%{opacity:.72;transform:scale(1.06)}}@keyframes rays{to{transform:translate3d(2%,1%,0) rotate(.35deg);opacity:.52}}
 @media(max-width:780px){.garden-stage{min-height:560px}.garden-world{inset:-4%;transform:scale(1.12)}.layer-far{inset:-5%}.layer-main{inset:-10%}.layer-mid{inset:-17%}.layer-left{inset:-27%}.layer-near{inset:-38%}.garden-title{top:11%;padding:1rem}.garden-title h1{font-size:clamp(2.2rem,10vw,4rem)}.look-hint{bottom:15%;width:90%;text-align:center;font-size:.9rem}.meet-smile{bottom:6%;padding:.9rem 1.5rem}.art-grid{grid-template-columns:1fr}.sound-toggle{top:.75rem;right:.75rem}.feature-caption{align-items:flex-start;gap:.3rem;flex-direction:column}.reveal-tree{width:65%;background-size:auto 108%}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.garden-intro{display:none}}
+.smile-closing{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:2.8rem;margin:4rem auto 0}.smile-closing .return-journal{margin:0}.continue-manifesto{display:flex;min-width:min(90vw,390px);flex-direction:column;align-items:center;gap:.45rem;padding:1.15rem 2rem;border:1px solid rgba(255,226,176,.48);border-radius:999px;color:#24150e;text-decoration:none;background:linear-gradient(180deg,#fff4d8,#e9bd7f);box-shadow:0 15px 55px rgba(0,0,0,.35);transition:transform .45s ease,box-shadow .45s ease}.continue-manifesto span{text-transform:uppercase;letter-spacing:.18em;font-size:.84rem}.continue-manifesto small{font-size:.78rem;opacity:.72}.continue-manifesto:hover,.continue-manifesto:focus-visible{transform:translateY(-4px);box-shadow:0 20px 68px rgba(217,164,99,.22)}.manifesto-whiteout{position:fixed;z-index:1000;inset:0;background:#fff;opacity:0;visibility:hidden;pointer-events:none;transition:opacity 1.15s ease,visibility 0s linear 1.15s}.manifesto-whiteout.is-active{opacity:1;visibility:visible;transition:opacity 1.15s ease}
+@media(max-width:780px){.continue-manifesto{min-width:0;width:100%;max-width:390px;text-align:center}}
+
+/* On touch screens the 3:1 garden becomes a draggable panorama. */
+@media(max-width:780px){
+  .garden-stage{touch-action:none;cursor:grab;user-select:none}
+  .garden-stage.is-dragging{cursor:grabbing}
+  .garden-world{top:0;bottom:auto;left:calc(50% - 150svh);right:auto;width:300svh;height:100svh;min-width:1680px;min-height:560px;inset-block:0 auto;overflow:hidden;transform:translate3d(0,0,0)}
+  .layer-far{inset:-2%}
+  .layer-main{inset:-4%;clip-path:polygon(0 5%,100% 5%,100% 100%,0 100%)}
+  .layer-mid{inset:-7%;clip-path:polygon(0 69%,24% 64%,52% 71%,78% 65%,100% 68%,100% 100%,0 100%)}
+  .layer-left{inset:-11%;clip-path:polygon(0 0,34% 0,29% 28%,25% 58%,38% 100%,0 100%)}
+  .layer-near{inset:-15%;clip-path:polygon(68% 0,100% 0,100% 100%,61% 100%,70% 62%,66% 29%)}
+  .look-hint{bottom:16%;padding:.5rem .85rem;border-radius:999px;background:rgba(31,15,8,.28);backdrop-filter:blur(7px)}
+}

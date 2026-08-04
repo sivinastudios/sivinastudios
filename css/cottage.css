@@ -367,7 +367,7 @@ body.returning-to-journal .cinematic-bars { display: none; }
     box-shadow: inset 0 0 36px rgba(66, 38, 18, .34), 0 12px 28px rgba(0, 0, 0, .28);
     pointer-events: none;
 }
-.page-frame.page-late .journal-backing { display: block; }
+.page-frame.page-late .journal-backing { display: none; }
 .page-frame.page-six-living .journal-backing { inset: 7.9% 9.6% 8.7% 6.7%; }
 .page-frame.page-seven-living .journal-backing { inset: 7.3% 14.5% 8% 13.7%; }
 .page-frame.page-eight-living .journal-backing { inset: 6.7% 15.4% 6.7% 14.9%; }
@@ -557,8 +557,8 @@ body.returning-to-journal .cinematic-bars { display: none; }
     71% { transform: translate3d(-.6px,.35px,0) rotate(-.038deg); }
     75% { transform: translate3d(0,0,0) rotate(0deg); }
 }
-.page-frame.is-turning-forward .journal-page { opacity: .08; transform: perspective(1200px) rotateY(-18deg) translateX(-2%); transform-origin: left center; }
-.page-frame.is-turning-back .journal-page { opacity: .08; transform: perspective(1200px) rotateY(18deg) translateX(2%); transform-origin: right center; }
+.page-frame.is-turning-forward .journal-page { opacity: 1; transform: perspective(1200px) rotateY(-10deg) translateX(-1%); transform-origin: left center; }
+.page-frame.is-turning-back .journal-page { opacity: 1; transform: perspective(1200px) rotateY(10deg) translateX(1%); transform-origin: right center; }
 
 .page-zone {
     position: absolute;
@@ -965,3 +965,8 @@ body.returning-to-journal .cinematic-bars { display: none; }
     .invitation-eye-left { left: calc(50% - 48px); }
     .invitation-eye-right { right: calc(50% - 48px); }
 }
+
+/* Paper Polish Sprint: pages 6–9 now use their original transparent artwork only.
+   The former tan backing and low-opacity page-turn flash are intentionally disabled. */
+.page-frame.page-late { background: transparent; }
+.page-frame.page-late .journal-page { background: transparent; }

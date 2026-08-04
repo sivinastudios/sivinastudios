@@ -10,17 +10,26 @@ const panelClose = document.getElementById('panelClose');
 // The upward reveal is synchronized to the chosen musical cue.
 const REVEAL_CUE_SECONDS = 10.4;
 let revealStarted = false;
+let revealFallbackTimer = null;
 let spiritAudioWasPlayingBeforeHidden = false;
 
 function beginReveal() {
     if (revealStarted) return;
     revealStarted = true;
+    if (revealFallbackTimer) window.clearTimeout(revealFallbackTimer);
     firstView.classList.add('is-attentive');
     window.setTimeout(() => firstView.classList.add('is-revealing'), 850);
 }
 
+function scheduleRevealFallback(delaySeconds = REVEAL_CUE_SECONDS) {
+    if (revealStarted || revealFallbackTimer) return;
+    revealFallbackTimer = window.setTimeout(beginReveal, delaySeconds * 1000);
+}
+
 function beginAudio() {
-    if (!spiritAudio || document.hidden) return;
+    if (document.hidden) return;
+    scheduleRevealFallback();
+    if (!spiritAudio) return;
     spiritAudio.volume = 0.72;
     spiritAudio.loop = true;
     spiritAudio.play().then(() => {
@@ -65,8 +74,9 @@ window.addEventListener('keydown', (event) => {
 });
 
 window.addEventListener('load', () => {
-    // The journal click generally gives the browser enough user intent to permit sound.
-    // A visible fallback remains available if autoplay is blocked.
+    // Always preserve the ascent, even when the browser blocks autoplay.
+    // If audio plays, the timeupdate cue remains the primary synchronization source.
+    scheduleRevealFallback(REVEAL_CUE_SECONDS + 0.9);
     window.setTimeout(beginAudio, 900);
 });
 

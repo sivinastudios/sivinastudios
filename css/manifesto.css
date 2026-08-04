@@ -1,0 +1,65 @@
+:root{--paper:#fbfaf6;--ink:#111214;--quiet:#6e706f;--line:#bbbcb8;--night:#11100f}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--night)}body{margin:0;background:var(--night);color:#f8f5ef;font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}html.cinematic-locked,body.cinematic-locked{height:100%;overflow:hidden;overscroll-behavior:none}button,a{font:inherit}
+.white-arrival{position:fixed;z-index:200;inset:0;background:#fff;pointer-events:none;animation:whiteArrival 1.5s ease .5s forwards}
+.wake-scene{position:fixed;z-index:100;inset:0;background:#050505;overflow:hidden;transition:opacity 1.2s ease,visibility 0s linear 1.2s}.laptop-hotspot,.manifesto-ending button{border:1px solid rgba(255,255,255,.62);border-radius:999px;padding:.85rem 1.4rem;color:white;background:rgba(10,9,8,.48);cursor:pointer;letter-spacing:.12em;text-transform:uppercase;font-size:.75rem}
+.wake-scene{z-index:90;opacity:0;visibility:hidden}.wake-scene.is-active{opacity:1;visibility:visible;transition:opacity 1.2s ease}.wake-scene>img{width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(.7);transform:scale(1.02)}.wake-room-shade{position:absolute;inset:0;background:radial-gradient(circle at 52% 51%,transparent 0 17%,rgba(0,0,0,.18) 42%,rgba(0,0,0,.58))}.laptop-hotspot{position:absolute;z-index:3;left:52%;top:51%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:.7rem;border:0;background:transparent;text-shadow:0 2px 12px #000}.wake-ring{width:58px;height:58px;border:1px solid rgba(224,233,245,.88);border-radius:50%;box-shadow:0 0 0 9px rgba(185,208,238,.08),0 0 30px rgba(202,221,247,.6);animation:wakePulse 2.2s ease-in-out infinite}.laptop-hotspot:hover .wake-ring,.laptop-hotspot:focus-visible .wake-ring{background:rgba(229,239,252,.26);transform:scale(1.08)}.screen-wake{position:absolute;z-index:4;left:50%;top:50%;width:min(88vw,850px);height:min(68vh,560px);transform:translate(-50%,-50%) scale(.08);opacity:0;border-radius:10px;overflow:hidden;background:#f8f7f3;box-shadow:0 0 0 1px rgba(255,255,255,.34),0 0 90px rgba(205,226,255,.66),0 40px 100px rgba(0,0,0,.62);transform-origin:center;transition:transform 1.5s cubic-bezier(.16,.82,.22,1),opacity .55s ease}.screen-wake.is-awake{transform:translate(-50%,-50%) scale(1);opacity:1}.browser-chrome{height:34px;display:flex;align-items:center;gap:7px;padding:0 12px;background:#e8e8e7;border-bottom:1px solid #d2d2cf}.browser-chrome i{width:9px;height:9px;border-radius:50%;background:#aaa}.wake-document{height:calc(100% - 34px);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#111;text-align:center}.wake-document p{text-transform:uppercase;letter-spacing:.15em;font-weight:700}.wake-document h1{margin:.3rem 0 .8rem;font-size:clamp(2rem,6vw,5.2rem);line-height:.95}.wake-document span{font-weight:600}.wake-scene.is-opening{opacity:0;visibility:hidden;transition:opacity 1.2s ease 1.1s,visibility 0s linear 2.3s}
+.manifesto-experience{position:relative;min-height:100vh;padding:12vh 0 18vh;opacity:0;transition:opacity 1.4s ease}.manifesto-experience.is-active{opacity:1}.room-backgrounds{position:fixed;z-index:0;inset:0;overflow:hidden;background:#12100f}.room-photo{position:absolute;inset:-4%;background-position:center;background-size:cover;opacity:0;transform:scale(1.07) translate3d(-.5%,0,0);transition:opacity 2.8s ease;animation:roomBreath 24s ease-in-out infinite alternate;will-change:transform,opacity}.room-photo.is-visible{opacity:1}.room-photo-b{animation-direction:alternate-reverse}.room-dim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,7,7,.68),rgba(8,7,7,.35) 50%,rgba(8,7,7,.7)),radial-gradient(circle at 50% 42%,transparent,rgba(0,0,0,.38));backdrop-filter:blur(.6px)}.reading-header{position:fixed;z-index:20;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:1rem clamp(1rem,4vw,3rem);background:linear-gradient(180deg,rgba(7,7,7,.66),transparent);pointer-events:none}.reading-header a,.reading-header button{pointer-events:auto;color:rgba(255,255,255,.82);background:transparent;border:0;border-bottom:1px solid rgba(255,255,255,.3);padding:.45rem;text-decoration:none;cursor:pointer;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase}
+.manifesto-document{position:relative;z-index:2;width:min(92vw,860px);margin:0 auto;display:grid;gap:14vh}.manifesto-page{position:relative;min-height:1120px;padding:clamp(3.4rem,8vw,7rem) clamp(2rem,8vw,6.3rem) 5rem;background:var(--paper);color:var(--ink);box-shadow:0 40px 120px rgba(0,0,0,.52);font-size:clamp(.97rem,1.35vw,1.08rem);line-height:1.42}.manifesto-page h1,.manifesto-page h2,.manifesto-page h3,.manifesto-page p{max-width:100%}.manifesto-page h2{margin:2rem 0 1.25rem;font-size:clamp(1.75rem,4vw,2.45rem);line-height:1.08}.manifesto-page h3{margin:1.6rem 0 .8rem;font-size:1rem}.manifesto-page p{margin:0 0 1.35rem}.manifesto-page hr{border:0;border-top:1px solid var(--line);margin:2rem 0}.manifesto-page blockquote{max-width:88%;margin:2rem auto;font-family:Georgia,serif;font-style:italic;line-height:1.55}.manifesto-title{margin-bottom:2rem}.manifesto-title p{margin:.6rem 0;font-weight:700}.manifesto-title .studio-name{text-transform:uppercase;font-size:clamp(1.5rem,4vw,2.25rem);letter-spacing:.02em}.manifesto-title h1{margin:1rem 0;font-size:clamp(1.5rem,3vw,2rem)}.manifesto-title .edition{margin-top:1.4rem;font-size:.85rem}.page-number{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);color:var(--quiet);font-size:.82rem}
+.manifesto-ending{position:relative;z-index:3;display:flex;min-height:70vh;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;text-align:center}.manifesto-ending p{font-family:Georgia,serif;font-style:italic;font-size:clamp(1.1rem,2vw,1.45rem)}.manifesto-ending button{min-width:170px;background:rgba(10,9,8,.64);transition:background .35s ease,transform .35s ease}.manifesto-ending button:hover,.manifesto-ending button:focus-visible{background:rgba(248,245,239,.18);transform:translateY(-3px)}.manifesto-ending a{color:rgba(255,255,255,.66);font-size:.75rem;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.28);padding:.35rem}.door-transition{position:fixed;z-index:300;inset:0;background:#090807;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .9s ease}.door-transition.is-active{opacity:1;visibility:visible}.door-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(.55);transition:opacity 1.4s ease}.door-open{opacity:0}.door-transition.is-open .door-closed{opacity:0}.door-transition.is-open .door-open{opacity:1}.door-transition p{position:absolute;z-index:2;left:50%;bottom:8%;transform:translate(-50%,12px);opacity:0;width:90%;text-align:center;font-family:Georgia,serif;font-style:italic;text-shadow:0 2px 14px #000;transition:opacity 1s ease 1s,transform 1s ease 1s}.door-transition.is-open p{opacity:1;transform:translate(-50%,0)}
+@keyframes whiteArrival{0%{opacity:1}100%{opacity:0;visibility:hidden}}@keyframes wakePulse{50%{transform:scale(1.08);box-shadow:0 0 0 15px rgba(185,208,238,.04),0 0 45px rgba(202,221,247,.72)}}@keyframes roomBreath{0%{transform:scale(1.07) translate3d(-.6%,-.3%,0)}100%{transform:scale(1.12) translate3d(.7%,.5%,0)}}
+@media(max-width:700px){.wake-scene>img{object-position:54% center}.laptop-hotspot{top:53%}.screen-wake{height:min(62vh,500px)}.manifesto-experience{padding-top:10vh}.manifesto-document{width:min(94vw,860px);gap:8vh}.manifesto-page{min-height:auto;padding:3.4rem 1.5rem 4rem;font-size:.94rem;line-height:1.5}.manifesto-page p{margin-bottom:1.15rem}.reading-header{padding:.65rem}.reading-header a,.reading-header button{font-size:.62rem}.door-photo{object-position:center}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.room-photo{transform:scale(1.02)}.white-arrival{display:none}}
+.screen-wake{pointer-events:none}
+
+/* Manifesto reading world — the real workspace is the entrance; Yumemori carries the reading. */
+.yumemori-reading-background {
+    background: #0d0715;
+}
+.yumemori-half {
+    position: absolute;
+    left: -5%;
+    width: 110%;
+    height: 58%;
+    background-image: url("../assets/spirit/first-view-background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center 76%;
+    filter: saturate(.9) brightness(.72);
+    will-change: transform;
+}
+.yumemori-upper {
+    top: -8%;
+    transform: scaleY(-1) scale(1.08);
+    transform-origin: center bottom;
+}
+.yumemori-lower {
+    bottom: -8%;
+    transform: scale(1.08);
+    transform-origin: center top;
+}
+.manifesto-experience.is-active .yumemori-upper { animation: yumemoriUpperDrift 34s ease-in-out infinite alternate; }
+.manifesto-experience.is-active .yumemori-lower { animation: yumemoriLowerDrift 38s ease-in-out infinite alternate; }
+.yumemori-reading-background .room-dim {
+    background:
+      linear-gradient(180deg, rgba(8,4,14,.52), rgba(8,4,14,.22) 48%, rgba(8,4,14,.58)),
+      radial-gradient(circle at 50% 50%, transparent 0 22%, rgba(6,3,10,.42) 72%, rgba(5,3,8,.78));
+    backdrop-filter: blur(1px);
+}
+@keyframes yumemoriUpperDrift {
+    from { transform: scaleY(-1) scale(1.08) translate3d(-1.2%, -.8%, 0); }
+    to { transform: scaleY(-1) scale(1.16) translate3d(1.4%, .9%, 0); }
+}
+@keyframes yumemoriLowerDrift {
+    from { transform: scale(1.08) translate3d(1%, .7%, 0); }
+    to { transform: scale(1.16) translate3d(-1.3%, -.8%, 0); }
+}
+
+/* Sawa now carries the reading experience after the laptop wakes. */
+.sawa-reading-background{background:#120d16}
+.sawa-reading-image{position:absolute;inset:-4%;background-image:url("../assets/manifesto/sawa.png");background-position:center;background-repeat:no-repeat;background-size:cover;filter:saturate(.82) brightness(.72);transform:scale(1.04);will-change:transform}
+.manifesto-experience.is-active .sawa-reading-image{animation:sawaReadingDrift 32s ease-in-out infinite alternate}
+.sawa-reading-background .room-dim{background:linear-gradient(90deg,rgba(8,5,9,.7),rgba(8,5,9,.34) 50%,rgba(8,5,9,.72)),radial-gradient(circle at 50% 44%,transparent 0 24%,rgba(7,4,8,.5) 74%,rgba(5,3,6,.82));backdrop-filter:blur(1.2px)}
+@keyframes sawaReadingDrift{from{transform:scale(1.04) translate3d(-.7%,-.35%,0)}to{transform:scale(1.1) translate3d(.8%,.45%,0)}}
+@media(max-width:700px){.sawa-reading-image{background-size:auto 112%;background-position:center top}}
+.white-arrival{animation:whiteArrival .85s ease .15s forwards}
