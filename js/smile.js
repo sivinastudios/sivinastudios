@@ -36,9 +36,22 @@ soundToggle.addEventListener('click',()=>{if(audio.paused){startAudio();if(audio
 
 meet.addEventListener('mouseenter',()=>{world.style.filter='brightness(1.08) saturate(1.08)';startAudio()});
 meet.addEventListener('mouseleave',()=>world.style.filter='');
-meet.addEventListener('click',()=>gallery.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}));
+function unlockSmileGallery({scroll=true}={}){
+    document.documentElement.classList.remove('smile-locked');
+    document.body.classList.remove('smile-locked');
+    gallery.removeAttribute('inert');
+    if(scroll)gallery.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+}
 
-addEventListener('load',()=>{setTimeout(()=>title.classList.add('is-visible'),4700);setTimeout(()=>hint.classList.add('is-visible'),5500);setTimeout(()=>meet.classList.add('is-visible'),6200)});
+meet.addEventListener('click',()=>unlockSmileGallery());
+
+addEventListener('load',()=>{
+    if(location.hash==='#smileGallery')requestAnimationFrame(()=>unlockSmileGallery({scroll:true}));
+    setTimeout(()=>title.classList.add('is-visible'),4700);
+    setTimeout(()=>hint.classList.add('is-visible'),5500);
+    setTimeout(()=>meet.classList.add('is-visible'),6200)
+});
+addEventListener('pageshow',()=>{if(location.hash==='#smileGallery')unlockSmileGallery({scroll:false})});
 addEventListener('pointerdown',startAudio,{once:true});
 addEventListener('keydown',startAudio,{once:true});
 

@@ -47,6 +47,7 @@
                 <button class="journal-close" id="journalClose" type="button" aria-label="Close the journal">×</button>
 
                 <div class="page-frame page-one-living" id="pageFrame">
+                    <div class="journal-backing" aria-hidden="true"></div>
                     <img class="journal-page" id="journalPage" src="assets/journal/1.png" alt="Sawa's journal, page 1">
                     <div class="page-one-light" id="pageOneLight" aria-hidden="true"></div>
                     <canvas class="page-one-dust" id="pageOneDust" aria-hidden="true"></canvas>
@@ -110,7 +111,6 @@
 
         <audio id="staticVeinsAudio" preload="auto" loop>
             <source src="audio/static-in-the-viens.wav" type="audio/wav">
-            <source src="audio/static-in-the-viens.mp3" type="audio/mpeg">
         </audio>
 
         <!-- Optional final audio files. Add these exact filenames later; the page works silently without them. -->
