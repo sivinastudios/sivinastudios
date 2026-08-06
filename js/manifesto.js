@@ -1,90 +1,358 @@
-const html=document.documentElement;
-const body=document.body;
-const wakeScene=document.getElementById('wakeScene');
-const wakeLaptop=document.getElementById('wakeLaptop');
-const screenWake=document.getElementById('screenWake');
-const experience=document.getElementById('manifestoExperience');
-const ambience=document.getElementById('houseAmbience');
-const ambienceToggle=document.getElementById('ambienceToggle');
-const pages=[...document.querySelectorAll('.manifesto-page')];
-const foundersContinue=document.getElementById('foundersContinue');
-const doorTransition=document.getElementById('doorTransition');
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const baseVolume=.5;
-let ambienceWanted=true;
-let ambienceWasPlaying=false;
+(() => {
+  const root = document.documentElement;
+  const canvas = document.getElementById('sceneCanvas');
+  const ctx = canvas.getContext('2d', { alpha: false });
+  const doc = document.getElementById('manifestoDocument');
+  const viewport = document.getElementById('documentViewport');
+  const chapters = [...document.querySelectorAll('.chapter')];
+  const links = [];
+  const chapterNumber = document.getElementById('chapterNumber');
+  const progressLabel = document.getElementById('progressLabel');
+  const scrollCue = document.querySelector('.scroll-cue');
+  const sound = document.getElementById('soundToggle');
+  const audio = document.getElementById('houseAmbience');
 
-function fadeVolume(target,duration=1200){
-  const startVolume=ambience.volume;
-  const start=performance.now();
-  const step=now=>{
-    const progress=Math.min(1,(now-start)/duration);
-    ambience.volume=startVolume+(target-startVolume)*(1-Math.pow(1-progress,3));
-    if(progress<1)requestAnimationFrame(step);
+  const paths = {
+    reality: 'assets/manifesto/states/reality.png',
+    sketch: 'assets/manifesto/states/sketch.png',
+    watercolor: 'assets/manifesto/states/watercolor.png'
   };
-  requestAnimationFrame(step);
-}
 
-function unlockAudio(){
-  if(!ambienceWanted)return;
-  ambience.volume=0;
-  ambience.play().then(()=>fadeVolume(baseVolume,2200)).catch(()=>{});
-}
+  const images = {};
+  let targetKnowing = 0;
+  let knowing = 0;
+  let docTarget = 0;
+  let docCurrent = 0;
+  let soundOn = false;
+  let frame = 0;
+  let cover = { x: 0, y: 0, w: 0, h: 0 };
+  let eraseMarks = [];
+  let colorMarks = [];
+  let lastSizeKey = '';
 
-function openManifesto(){
-  wakeLaptop.disabled=true;
-  screenWake.setAttribute('aria-hidden','false');
-  screenWake.classList.add('is-awake');
-  unlockAudio();
-  setTimeout(()=>{
-    experience.removeAttribute('inert');
-    experience.classList.add('is-active');
-    wakeScene.classList.add('is-opening');
-    html.classList.remove('cinematic-locked');
-    body.classList.remove('cinematic-locked');
-    window.scrollTo(0,0);
-  },reduce?20:1700);
-}
+  const clamp = (n, min = 0, max = 1) => Math.max(min, Math.min(max, n));
+  const smoothstep = (a, b, x) => {
+    const t = clamp((x - a) / (b - a));
+    return t * t * (3 - 2 * t);
+  };
 
-function updateAmbienceFromScroll(){
-  if(!ambienceWanted||ambience.paused)return;
-  const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
-  const progress=Math.max(0,Math.min(1,scrollY/max));
-  let multiplier=1;
-  if(progress>.72)multiplier=.7;
-  else if(progress>.38)multiplier=.8;
-  else if(progress>.08)multiplier=.9;
-  ambience.volume=baseVolume*multiplier;
-}
+  function loadImage(key, src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => { images[key] = img; resolve(); };
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
 
-wakeLaptop.addEventListener('click',openManifesto);
+  function seededRandom(seed) {
+    let s = seed >>> 0;
+    return () => {
+      s = (s * 1664525 + 1013904223) >>> 0;
+      return s / 4294967296;
+    };
+  }
 
-addEventListener('scroll',()=>{
-  updateAmbienceFromScroll();
-  const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
-  const progress=Math.max(0,Math.min(1,scrollY/max));
-  document.documentElement.style.setProperty('--manifesto-scroll',String(progress));
-},{passive:true});
+  function buildMarks() {
+    const rand = seededRandom(1234567);
+    eraseMarks = [];
+    colorMarks = [];
+    const cx = cover.x + cover.w * 0.50;
+    const cy = cover.y + cover.h * 0.43;
+    const maxD = Math.hypot(canvas.width, canvas.height);
 
-ambienceToggle.addEventListener('click',()=>{
-  ambienceWanted=ambience.paused;
-  ambienceToggle.setAttribute('aria-pressed',String(ambienceWanted));
-  if(ambienceWanted)ambience.play().then(()=>fadeVolume(baseVolume,700)).catch(()=>{});
-  else{fadeVolume(0,450);setTimeout(()=>ambience.pause(),470)}
-});
+    // Broad, hand-rubbed eraser strokes. These avoid the circular holes that
+    // made the previous pass resemble a burning Polaroid.
+    for (let i = 0; i < 420; i++) {
+      const angle = (rand() - .5) * .9;
+      const length = (140 + rand() * 420) * devicePixelRatio;
+      const width = (18 + rand() * 58) * devicePixelRatio;
+      const x = rand() * canvas.width;
+      const y = rand() * canvas.height;
+      const d = Math.hypot(x - cx, y - cy) / maxD;
+      const inLaptop = x > cover.x + cover.w * .08 && x < cover.x + cover.w * .91 &&
+        y > cover.y + cover.h * .05 && y < cover.y + cover.h * .84;
+      const laptopBias = inLaptop ? -.18 : 0;
+      eraseMarks.push({
+        x1: x - Math.cos(angle) * length * .5,
+        y1: y - Math.sin(angle) * length * .5,
+        x2: x + Math.cos(angle) * length * .5,
+        y2: y + Math.sin(angle) * length * .5,
+        width,
+        order: clamp(d + laptopBias + (rand() - .5) * .12),
+        alpha: .48 + rand() * .42
+      });
+    }
+    eraseMarks.sort((a, b) => a.order - b.order);
 
-foundersContinue.addEventListener('click',()=>{
-  html.classList.add('cinematic-locked');body.classList.add('cinematic-locked');
-  doorTransition.setAttribute('aria-hidden','false');
-  doorTransition.classList.add('is-active');
-  fadeVolume(0,2600);
-  setTimeout(()=>doorTransition.classList.add('is-open'),reduce?40:1050);
-  setTimeout(()=>{location.href='founders.html'},reduce?140:3900);
-});
+    for (let i = 0; i < 520; i++) {
+      const x = rand() * canvas.width;
+      const y = rand() * canvas.height;
+      const d = Math.hypot(x - cx, y - cy) / maxD;
+      colorMarks.push({
+        x, y,
+        r: (55 + rand() * 190) * devicePixelRatio,
+        order: clamp(d * .78 + (rand() - .5) * .22),
+        soft: .5 + rand() * .32
+      });
+    }
+    colorMarks.sort((a, b) => a.order - b.order);
+  }
 
-document.addEventListener('visibilitychange',()=>{
-  if(document.hidden){ambienceWasPlaying=!ambience.paused;ambience.pause();return}
-  if(ambienceWasPlaying&&ambienceWanted)ambience.play().catch(()=>{});
-  ambienceWasPlaying=false;
-});
-addEventListener('pagehide',()=>ambience.pause());
+  function resizeCanvas() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(innerWidth * dpr);
+    canvas.height = Math.round(innerHeight * dpr);
+    canvas.style.width = `${innerWidth}px`;
+    canvas.style.height = `${innerHeight}px`;
+
+    const imageRatio = 1.5;
+    const availableW = canvas.width * .94;
+    const availableH = canvas.height * .94;
+    let dw = availableW;
+    let dh = dw / imageRatio;
+    if (dh > availableH) {
+      dh = availableH;
+      dw = dh * imageRatio;
+    }
+    const dx = (canvas.width - dw) / 2;
+    const dy = (canvas.height - dh) / 2;
+    cover = { x: dx, y: dy, w: dw, h: dh };
+
+    // Exact normalized coordinates of the laptop's luminous screen in the 1536×1024 master frames.
+    const sx = dx + dw * (156 / 1536);
+    const sy = dy + dh * (81 / 1024);
+    const sw = dw * (1225 / 1536);
+    const sh = dh * (778 / 1024);
+    root.style.setProperty('--screen-left', `${sx / dpr}px`);
+    root.style.setProperty('--screen-top', `${sy / dpr}px`);
+    root.style.setProperty('--screen-width', `${sw / dpr}px`);
+    root.style.setProperty('--screen-height', `${sh / dpr}px`);
+
+    const key = `${canvas.width}x${canvas.height}`;
+    if (key !== lastSizeKey) { lastSizeKey = key; buildMarks(); }
+  }
+
+  function createLayer(img) {
+    const layer = document.createElement('canvas');
+    layer.width = canvas.width;
+    layer.height = canvas.height;
+    const lctx = layer.getContext('2d');
+    lctx.drawImage(img, cover.x, cover.y, cover.w, cover.h);
+    return { layer, lctx };
+  }
+
+  function eraseWithMarks(layerCtx, marks, progress, edge = .14) {
+    if (progress <= 0) return;
+    layerCtx.save();
+    layerCtx.globalCompositeOperation = 'destination-out';
+    layerCtx.lineCap = 'round';
+    layerCtx.lineJoin = 'round';
+
+    for (const mark of marks) {
+      const local = clamp((progress - mark.order) / edge);
+      if (local <= 0) continue;
+
+      // Several translucent passes build up a dry, rubbed-pencil erasure.
+      const passes = 5;
+      for (let pass = 0; pass < passes; pass++) {
+        const wobble = (pass - 1) * mark.width * .18;
+        layerCtx.globalAlpha = Math.min(1, mark.alpha * (0.58 + local * 1.35) * (pass === 2 ? 1 : .82));
+        layerCtx.lineWidth = mark.width * (.62 + local * 1.18) * (1 - pass * .055);
+        layerCtx.beginPath();
+        layerCtx.moveTo(mark.x1, mark.y1 + wobble);
+        layerCtx.quadraticCurveTo(
+          (mark.x1 + mark.x2) * .5 + Math.sin(mark.order * 31) * mark.width,
+          (mark.y1 + mark.y2) * .5 + Math.cos(mark.order * 27) * mark.width * .65 + wobble,
+          mark.x2,
+          mark.y2 + wobble
+        );
+        layerCtx.stroke();
+      }
+    }
+    // At the very end, finish the physical erasure completely so no photographic
+    // islands remain. This is delayed until the final fraction of Knowing.
+    if (progress >= .985) {
+      layerCtx.globalCompositeOperation = 'destination-out';
+      layerCtx.globalAlpha = smoothstep(.985, 1, progress);
+      layerCtx.fillRect(0, 0, layerCtx.canvas.width, layerCtx.canvas.height);
+    }
+    layerCtx.restore();
+  }
+
+  function revealWithMarks(base, reveal, marks, progress) {
+    const revealCanvas = document.createElement('canvas');
+    revealCanvas.width = canvas.width;
+    revealCanvas.height = canvas.height;
+    const rctx = revealCanvas.getContext('2d');
+    rctx.drawImage(reveal, 0, 0);
+    const mask = document.createElement('canvas');
+    mask.width = canvas.width;
+    mask.height = canvas.height;
+    const mctx = mask.getContext('2d');
+    for (const mark of marks) {
+      const local = clamp((progress - mark.order) / .11);
+      if (local <= 0) continue;
+      const radius = mark.r * (0.25 + local * .92);
+      const gradient = mctx.createRadialGradient(mark.x, mark.y, radius * mark.soft, mark.x, mark.y, radius);
+      gradient.addColorStop(0, `rgba(255,255,255,${local})`);
+      gradient.addColorStop(.75, `rgba(255,255,255,${local * .72})`);
+      gradient.addColorStop(1, 'rgba(255,255,255,0)');
+      mctx.fillStyle = gradient;
+      mctx.beginPath();
+      mctx.arc(mark.x, mark.y, radius, 0, Math.PI * 2);
+      mctx.fill();
+    }
+    // Broad translucent washes prevent the bloom from reading as isolated circles.
+    if (progress > .12) {
+      const wash = smoothstep(.12, .96, progress);
+      mctx.save();
+      mctx.globalAlpha = wash * .32;
+      mctx.filter = `blur(${Math.max(18, canvas.width * .018)}px)`;
+      mctx.fillStyle = '#fff';
+      const spread = canvas.width * (.18 + wash * .82);
+      mctx.fillRect(canvas.width * .5 - spread * .5, canvas.height * .12, spread, canvas.height * .76);
+      mctx.restore();
+    }
+    rctx.globalCompositeOperation = 'destination-in';
+    rctx.drawImage(mask, 0, 0);
+    if (progress >= .985) {
+      rctx.globalCompositeOperation = 'source-over';
+      rctx.globalAlpha = smoothstep(.985, 1, progress);
+      rctx.drawImage(reveal, 0, 0);
+    }
+    base.drawImage(revealCanvas, 0, 0);
+  }
+
+  function drawScene() {
+    if (!images.reality) return;
+    ctx.fillStyle = '#171316';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const reality = createLayer(images.reality);
+    const sketch = createLayer(images.sketch);
+    const watercolor = createLayer(images.watercolor);
+
+    const eraseProgress = smoothstep(.75, 1.0, knowing);
+    const watercolorProgress = smoothstep(.87, 1.0, knowing);
+
+    ctx.drawImage(sketch.layer, 0, 0);
+    revealWithMarks(ctx, watercolor.layer, colorMarks, watercolorProgress);
+    eraseWithMarks(reality.lctx, eraseMarks, eraseProgress);
+    ctx.drawImage(reality.layer, 0, 0);
+
+    const breathe = 1 + Math.sin(frame * .008) * .008;
+    ctx.save();
+    ctx.globalAlpha = .035 * breathe;
+    ctx.fillStyle = '#f6e9dc';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+  }
+
+  function updateScrollTargets() {
+    const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+    const progress = clamp(scrollY / max);
+    targetKnowing = progress;
+    const docMax = Math.max(0, doc.scrollHeight - viewport.clientHeight);
+    docTarget = progress * docMax;
+    scrollCue.style.opacity = progress > .035 ? '0' : '1';
+  }
+
+  function selectChapter() {
+    const center = docCurrent + viewport.clientHeight * .44;
+    let active = 0;
+    chapters.forEach((chapter, i) => {
+      if (center >= chapter.offsetTop) active = i;
+      chapter.classList.toggle('is-visible', i === active || Math.abs(i - active) === 1);
+    });
+    links.forEach((link, i) => link.classList.toggle('is-active', i === active));
+    chapterNumber.textContent = String(active + 1).padStart(2, '0');
+  }
+
+  function enlivenText() {
+    const candidates = [...document.querySelectorAll('.chapter h1, .chapter h2, .chapter p')];
+    candidates.forEach((el, elementIndex) => {
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+
+      nodes.forEach((node, nodeIndex) => {
+        const frag = document.createDocumentFragment();
+        const tokens = node.nodeValue.match(/\s+|[^\s]+/g) || [];
+
+        tokens.forEach((token, tokenIndex) => {
+          if (/^\s+$/.test(token)) {
+            frag.append(token);
+            return;
+          }
+
+          // Keep each word intact so the browser can never split “understood”
+          // between individually animated letters.
+          const word = document.createElement('span');
+          word.className = 'living-word-unit';
+
+          [...token].forEach((char, charIndex) => {
+            const span = document.createElement('span');
+            span.className = 'living-letter';
+            span.textContent = char;
+            const n = (elementIndex * 19 + nodeIndex * 13 + tokenIndex * 7 + charIndex * 5) % 47;
+            if (n === 3 || n === 11 || n === 31) span.classList.add('is-breathing');
+            if (n === 17 || n === 39) span.classList.add('is-flickering');
+            if (n === 27) span.classList.add('is-shifting');
+            span.style.animationDelay = `${((elementIndex * 3 + tokenIndex + charIndex) % 17) * -.61}s`;
+            word.append(span);
+          });
+          frag.append(word);
+        });
+        node.replaceWith(frag);
+      });
+    });
+  }
+
+  function tick() {
+    frame++;
+    knowing += (targetKnowing - knowing) * .018;
+    docCurrent += (docTarget - docCurrent) * .075;
+    root.style.setProperty('--knowing', knowing.toFixed(4));
+    root.style.setProperty('--presence', ((Math.sin(frame * .012) + 1) / 2).toFixed(4));
+    doc.style.transform = `translate3d(0,${-docCurrent}px,0)`;
+    progressLabel.textContent = `KNOWING ${String(Math.round(knowing * 100)).padStart(2, '0')}`;
+    selectChapter();
+    drawScene();
+    requestAnimationFrame(tick);
+  }
+
+  links.forEach(link => link.addEventListener('click', event => {
+    event.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    const docMax = Math.max(1, doc.scrollHeight - viewport.clientHeight);
+    const p = clamp(target.offsetTop / docMax);
+    const max = document.documentElement.scrollHeight - innerHeight;
+    scrollTo({ top: p * max, behavior: 'smooth' });
+  }));
+
+  sound.addEventListener('click', () => {
+    soundOn = !soundOn;
+    sound.setAttribute('aria-pressed', String(soundOn));
+    sound.textContent = `ROOM SOUND ${soundOn ? 'ON' : 'OFF'}`;
+    if (soundOn) { audio.volume = .24; audio.play().catch(() => { soundOn = false; }); }
+    else audio.pause();
+  });
+
+  addEventListener('scroll', updateScrollTargets, { passive: true });
+  addEventListener('resize', () => { resizeCanvas(); updateScrollTargets(); });
+  addEventListener('pagehide', () => audio.pause());
+
+  Promise.all(Object.entries(paths).map(([key, src]) => loadImage(key, src)))
+    .then(() => {
+      resizeCanvas();
+      enlivenText();
+      updateScrollTargets();
+      chapters[0].classList.add('is-visible');
+      requestAnimationFrame(tick);
+    })
+    .catch(error => {
+      console.error('Living Manifesto assets could not load:', error);
+      document.body.classList.add('asset-error');
+    });
+})();

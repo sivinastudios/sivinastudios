@@ -1,0 +1,10 @@
+Living Manifesto Polish Pass 2
+
+Changes:
+- Prevented animated letters from splitting words across lines by wrapping each word as one unbreakable unit.
+- Increased document side margins and narrowed the reading column on desktop, tablet, and mobile.
+- Expanded the total reading distance and slowed the Knowing response so the final remembering unfolds longer.
+- Replaced circular burn-like erase holes with broad, layered, hand-rubbed eraser strokes.
+- Kept the sequence: reality erased to reveal graphite, then watercolor blooms beneath it.
+- Extended living typography behavior across the full manifesto instead of only headings and featured lines.
+- Made letter breathing, flicker, and tiny shifts visible enough to notice while remaining restrained.

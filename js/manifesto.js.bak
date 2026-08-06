@@ -1,0 +1,7 @@
+const root=document.documentElement,chapters=[...document.querySelectorAll('.chapter')],links=[...document.querySelectorAll('.chapters a')],number=document.getElementById('chapterNumber'),label=document.getElementById('progressLabel'),audio=document.getElementById('houseAmbience'),sound=document.getElementById('soundToggle');let target=0,current=0,soundOn=false;
+const clamp=n=>Math.max(0,Math.min(1,n));
+function readScroll(){const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);target=clamp(scrollY/max)}
+function presence(){current+=(target-current)*.045;root.style.setProperty('--knowing',current.toFixed(4));label.textContent=`KNOWING ${String(Math.round(current*100)).padStart(2,'0')}`;requestAnimationFrame(presence)}
+const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;chapters.forEach(c=>c.classList.toggle('is-visible',c===entry.target));const i=chapters.indexOf(entry.target);links.forEach((a,n)=>a.classList.toggle('is-active',n===i));number.textContent=String(i+1).padStart(2,'0')})},{rootMargin:'-38% 0px -44%'});chapters.forEach(c=>observer.observe(c));
+sound.addEventListener('click',()=>{soundOn=!soundOn;sound.setAttribute('aria-pressed',String(soundOn));sound.textContent=`ROOM SOUND  ${soundOn?'ON':'OFF'}`;if(soundOn){audio.volume=.28;audio.play().catch(()=>{soundOn=false})}else audio.pause()});
+addEventListener('scroll',readScroll,{passive:true});addEventListener('pagehide',()=>audio.pause());readScroll();presence();
