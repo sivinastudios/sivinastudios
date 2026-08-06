@@ -63,10 +63,10 @@
 
     // Broad, hand-rubbed eraser strokes. These avoid the circular holes that
     // made the previous pass resemble a burning Polaroid.
-    for (let i = 0; i < 420; i++) {
+    for (let i = 0; i < 190; i++) {
       const angle = (rand() - .5) * .9;
-      const length = (140 + rand() * 420) * devicePixelRatio;
-      const width = (18 + rand() * 58) * devicePixelRatio;
+      const length = (90 + rand() * 300) * devicePixelRatio;
+      const width = (10 + rand() * 34) * devicePixelRatio;
       const x = rand() * canvas.width;
       const y = rand() * canvas.height;
       const d = Math.hypot(x - cx, y - cy) / maxD;
@@ -80,18 +80,18 @@
         y2: y + Math.sin(angle) * length * .5,
         width,
         order: clamp(d + laptopBias + (rand() - .5) * .12),
-        alpha: .48 + rand() * .42
+        alpha: .18 + rand() * .22
       });
     }
     eraseMarks.sort((a, b) => a.order - b.order);
 
-    for (let i = 0; i < 520; i++) {
+    for (let i = 0; i < 300; i++) {
       const x = rand() * canvas.width;
       const y = rand() * canvas.height;
       const d = Math.hypot(x - cx, y - cy) / maxD;
       colorMarks.push({
         x, y,
-        r: (55 + rand() * 190) * devicePixelRatio,
+        r: (30 + rand() * 130) * devicePixelRatio,
         order: clamp(d * .78 + (rand() - .5) * .22),
         soft: .5 + rand() * .32
       });
@@ -154,11 +154,11 @@
       if (local <= 0) continue;
 
       // Several translucent passes build up a dry, rubbed-pencil erasure.
-      const passes = 5;
+      const passes = 3;
       for (let pass = 0; pass < passes; pass++) {
         const wobble = (pass - 1) * mark.width * .18;
-        layerCtx.globalAlpha = Math.min(1, mark.alpha * (0.58 + local * 1.35) * (pass === 2 ? 1 : .82));
-        layerCtx.lineWidth = mark.width * (.62 + local * 1.18) * (1 - pass * .055);
+        layerCtx.globalAlpha = mark.alpha * local * (pass === 1 ? 1 : .68);
+        layerCtx.lineWidth = mark.width * (.42 + local * .72) * (1 - pass * .08);
         layerCtx.beginPath();
         layerCtx.moveTo(mark.x1, mark.y1 + wobble);
         layerCtx.quadraticCurveTo(
@@ -169,13 +169,6 @@
         );
         layerCtx.stroke();
       }
-    }
-    // At the very end, finish the physical erasure completely so no photographic
-    // islands remain. This is delayed until the final fraction of Knowing.
-    if (progress >= .985) {
-      layerCtx.globalCompositeOperation = 'destination-out';
-      layerCtx.globalAlpha = smoothstep(.985, 1, progress);
-      layerCtx.fillRect(0, 0, layerCtx.canvas.width, layerCtx.canvas.height);
     }
     layerCtx.restore();
   }
@@ -203,24 +196,8 @@
       mctx.arc(mark.x, mark.y, radius, 0, Math.PI * 2);
       mctx.fill();
     }
-    // Broad translucent washes prevent the bloom from reading as isolated circles.
-    if (progress > .12) {
-      const wash = smoothstep(.12, .96, progress);
-      mctx.save();
-      mctx.globalAlpha = wash * .32;
-      mctx.filter = `blur(${Math.max(18, canvas.width * .018)}px)`;
-      mctx.fillStyle = '#fff';
-      const spread = canvas.width * (.18 + wash * .82);
-      mctx.fillRect(canvas.width * .5 - spread * .5, canvas.height * .12, spread, canvas.height * .76);
-      mctx.restore();
-    }
     rctx.globalCompositeOperation = 'destination-in';
     rctx.drawImage(mask, 0, 0);
-    if (progress >= .985) {
-      rctx.globalCompositeOperation = 'source-over';
-      rctx.globalAlpha = smoothstep(.985, 1, progress);
-      rctx.drawImage(reveal, 0, 0);
-    }
     base.drawImage(revealCanvas, 0, 0);
   }
 
@@ -233,8 +210,8 @@
     const sketch = createLayer(images.sketch);
     const watercolor = createLayer(images.watercolor);
 
-    const eraseProgress = smoothstep(.75, 1.0, knowing);
-    const watercolorProgress = smoothstep(.87, 1.0, knowing);
+    const eraseProgress = smoothstep(.815, 1.0, knowing);
+    const watercolorProgress = smoothstep(.925, 1.0, knowing);
 
     ctx.drawImage(sketch.layer, 0, 0);
     revealWithMarks(ctx, watercolor.layer, colorMarks, watercolorProgress);
@@ -296,8 +273,8 @@
             span.className = 'living-letter';
             span.textContent = char;
             const n = (elementIndex * 19 + nodeIndex * 13 + tokenIndex * 7 + charIndex * 5) % 47;
-            if (n === 3 || n === 11 || n === 31) span.classList.add('is-breathing');
-            if (n === 17 || n === 39) span.classList.add('is-flickering');
+            if (n === 3 || n === 31) span.classList.add('is-breathing');
+            if (n === 17) span.classList.add('is-flickering');
             if (n === 27) span.classList.add('is-shifting');
             span.style.animationDelay = `${((elementIndex * 3 + tokenIndex + charIndex) % 17) * -.61}s`;
             word.append(span);
