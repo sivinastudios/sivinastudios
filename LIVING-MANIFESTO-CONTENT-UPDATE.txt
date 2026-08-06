@@ -1,5 +1,0 @@
-Living Manifesto content update
-
-- Replaced the hardcoded manifesto copy in manifesto.html with the text from Living Manifesto.docx.
-- Preserved all existing chapter IDs, CSS classes, scrolling behavior, living typography, Knowing system, sketch reveal, and watercolor reveal.
-- Added assets/manifesto/Living Manifesto.docx as the source document.

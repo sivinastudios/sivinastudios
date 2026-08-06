@@ -1,3 +1,0 @@
-The Living Manifesto source text is contained in "Living Manifesto.docx".
-The website rendering is implemented in /manifesto.html.
-Updated August 5, 2026.
