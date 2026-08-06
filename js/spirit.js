@@ -12,6 +12,7 @@ const REVEAL_CUE_SECONDS = 10.4;
 let revealStarted = false;
 let revealFallbackTimer = null;
 let spiritAudioWasPlayingBeforeHidden = false;
+let panelTrigger = null;
 
 function beginReveal() {
     if (revealStarted) return;
@@ -50,6 +51,7 @@ spiritAudio?.addEventListener('ended', () => {
 beginSound?.addEventListener('click', beginAudio);
 
 function openPanel(kind) {
+    panelTrigger = document.activeElement;
     documentPanel.hidden = kind !== 'document';
     conceptPanel.hidden = kind !== 'concept';
     referencePanel.classList.add('is-open');
@@ -62,15 +64,18 @@ document.querySelectorAll('[data-panel]').forEach((button) => {
 });
 
 function closePanel() {
+    if (referencePanel.getAttribute('aria-hidden') === 'true') return;
     referencePanel.classList.remove('is-open');
     referencePanel.setAttribute('aria-hidden', 'true');
+    if (panelTrigger instanceof HTMLElement) panelTrigger.focus();
+    panelTrigger = null;
 }
 panelClose?.addEventListener('click', closePanel);
 referencePanel?.addEventListener('click', (event) => {
     if (event.target === referencePanel) closePanel();
 });
 window.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closePanel();
+    if (event.key === 'Escape' && referencePanel.getAttribute('aria-hidden') === 'false') closePanel();
 });
 
 window.addEventListener('load', () => {

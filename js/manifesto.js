@@ -451,7 +451,14 @@
     soundOn = !soundOn;
     sound.setAttribute('aria-pressed', String(soundOn));
     sound.textContent = `ROOM SOUND ${soundOn ? 'ON' : 'OFF'}`;
-    if (soundOn) { audio.volume = .24; audio.play().catch(() => { soundOn = false; }); }
+    if (soundOn) {
+      audio.volume = .24;
+      audio.play().catch(() => {
+        soundOn = false;
+        sound.setAttribute('aria-pressed', 'false');
+        sound.textContent = 'ROOM SOUND OFF';
+      });
+    }
     else audio.pause();
   });
 

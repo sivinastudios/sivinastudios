@@ -83,7 +83,7 @@ if(!reduce)requestAnimationFrame(life);
 
 function fadeAudio(to=0.52,duration=2400){if(!audio)return;const from=audio.volume;const start=performance.now();function step(now){const p=Math.min(1,(now-start)/duration);audio.volume=from+(to-from)*(1-Math.pow(1-p,3));if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)}
 function startAudio(){if(audioStarted||!audio)return;audioStarted=true;audio.volume=0;audio.play().then(()=>{soundToggle.setAttribute('aria-pressed','true');fadeAudio()}).catch(()=>{audioStarted=false})}
-soundToggle.addEventListener('click',()=>{if(audio.paused){startAudio();if(audioStarted){audio.play().then(()=>fadeAudio()).catch(()=>{})}}else{audio.pause();soundToggle.setAttribute('aria-pressed','false')}});
+soundToggle.addEventListener('click',()=>{if(audio.paused){startAudio();if(audioStarted){audio.play().then(()=>{soundToggle.setAttribute('aria-pressed','true');fadeAudio()}).catch(()=>{audioStarted=false;soundToggle.setAttribute('aria-pressed','false')})}}else{audio.pause();soundToggle.setAttribute('aria-pressed','false')}});
 
 meet.addEventListener('mouseenter',()=>{world.style.filter='brightness(1.08) saturate(1.08)';startAudio()});
 meet.addEventListener('mouseleave',()=>world.style.filter='');
@@ -107,9 +107,9 @@ continueManifesto?.addEventListener('click',event=>{
 addEventListener('load',()=>{
     if(mobileExplore)hint.textContent='Drag gently to explore the garden.';
     if(location.hash==='#smileGallery')requestAnimationFrame(()=>unlockSmileGallery({scroll:true}));
-    setTimeout(()=>title.classList.add('is-visible'),4700);
-    setTimeout(()=>hint.classList.add('is-visible'),5500);
-    setTimeout(()=>meet.classList.add('is-visible'),6200)
+    setTimeout(()=>title.classList.add('is-visible'),reduce?0:4700);
+    setTimeout(()=>hint.classList.add('is-visible'),reduce?0:5500);
+    setTimeout(()=>meet.classList.add('is-visible'),reduce?0:6200)
 });
 addEventListener('pageshow',()=>{if(location.hash==='#smileGallery')unlockSmileGallery({scroll:false})});
 addEventListener('pointerdown',startAudio,{once:true});
