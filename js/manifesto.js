@@ -228,17 +228,24 @@
         item.started = true;
       }
 
-      const eased = 1 - Math.pow(1 - local, 3);
-      const sway = Math.sin(local * Math.PI * 2 + item.seed) * item.sway;
+      // Hold the word clearly in view, then accelerate it beyond the page edge.
+      const eased = local < .16
+        ? Math.sin((local / .16) * Math.PI / 2) * .08
+        : .08 + .92 * Math.pow((local - .16) / .84, 1.55);
+      const sway = Math.sin(local * Math.PI * 2.6 + item.seed) * item.sway * (1 - local * .35);
       const x = item.startX + item.dx * eased + sway;
-      const y = item.startY - item.rise * eased - Math.sin(local * Math.PI) * 18;
-      const scale = 1 + local * .18;
+      const y = item.startY - item.rise * eased - Math.sin(local * Math.PI) * 34;
+      const scale = 1 + Math.sin(Math.min(1, local * 2.2) * Math.PI) * .22 + local * .2;
       item.clone.style.transform = `translate3d(${x}px,${y}px,0) translate(-50%,-50%) rotate(${item.spin * eased}deg) scale(${scale})`;
-      item.clone.style.opacity = String(1 - smoothstep(.72, 1, local));
-      item.clone.style.filter = `blur(${Math.max(0, (local - .72) * 9)}px)`;
+      item.clone.style.opacity = String(1 - smoothstep(.90, 1, local));
+      item.clone.style.filter = `blur(${Math.max(0, (local - .90) * 18)}px)`;
 
-      const radius = (42 + item.width * .45 + local * 90) * dpr;
-      wordTrails.push({ x: x * dpr, y: y * dpr, r: radius, alpha: .42 + local * .46 });
+      // The departing word triggers the erasure only after its escape is obvious.
+      const eraseWake = smoothstep(.28, .82, local);
+      if (eraseWake > 0) {
+        const radius = (34 + item.width * .38 + eraseWake * 112) * dpr;
+        wordTrails.push({ x: x * dpr, y: y * dpr, r: radius, alpha: (.28 + eraseWake * .62) * eraseWake });
+      }
       if (local >= 1) completed++;
     });
 
@@ -396,6 +403,8 @@
     }
 
     flyingWords = chosen.slice(0, desired).map((source, index, arr) => {
+      // Only words selected to fly receive the white mist while they wait.
+      source.classList.add('trigger-word');
       const clone = source.cloneNode(true);
       clone.className = 'flying-word';
       clone.style.display = 'none';
@@ -404,11 +413,11 @@
       return {
         source, clone, started:false,
         trigger: .20 + base * .58 + (rand() - .5) * .022,
-        duration: .095 + rand() * .055,
-        dx: (rand() - .5) * innerWidth * .42,
-        rise: innerHeight * (.30 + rand() * .34),
-        sway: 18 + rand() * 42,
-        spin: (rand() - .5) * 14,
+        duration: .13 + rand() * .055,
+        dx: (rand() < .5 ? -1 : 1) * innerWidth * (.58 + rand() * .42),
+        rise: innerHeight * (1.18 + rand() * .55),
+        sway: 28 + rand() * 58,
+        spin: (rand() - .5) * 24,
         seed: rand() * Math.PI * 2,
         width: 0, startX: 0, startY: 0
       };
@@ -442,7 +451,14 @@
     soundOn = !soundOn;
     sound.setAttribute('aria-pressed', String(soundOn));
     sound.textContent = `ROOM SOUND ${soundOn ? 'ON' : 'OFF'}`;
-    if (soundOn) { audio.volume = .24; audio.play().catch(() => { soundOn = false; }); }
+    if (soundOn) {
+      audio.volume = .24;
+      audio.play().catch(() => {
+        soundOn = false;
+        sound.setAttribute('aria-pressed', 'false');
+        sound.textContent = 'ROOM SOUND OFF';
+      });
+    }
     else audio.pause();
   });
 
