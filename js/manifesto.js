@@ -29,6 +29,9 @@
   let eraseMarks = [];
   let colorMarks = [];
   let lastSizeKey = '';
+  let flyingWords = [];
+  let wordTrails = [];
+  let escapeProgress = 0;
 
   const clamp = (n, min = 0, max = 1) => Math.max(min, Math.min(max, n));
   const smoothstep = (a, b, x) => {
@@ -106,15 +109,21 @@
     canvas.style.width = `${innerWidth}px`;
     canvas.style.height = `${innerHeight}px`;
 
-    const imageRatio = 1.5;
-    const availableW = canvas.width * .94;
-    const availableH = canvas.height * .94;
-    let dw = availableW;
-    let dh = dw / imageRatio;
-    if (dh > availableH) {
-      dh = availableH;
+    // Full-bleed 3:2 scene. Scale like CSS background-size: cover so the
+    // environment always reaches every edge of the browser with no black bars.
+    const imageRatio = 1536 / 1024;
+    const viewportRatio = canvas.width / canvas.height;
+    let dw;
+    let dh;
+
+    if (viewportRatio > imageRatio) {
+      dw = canvas.width;
+      dh = dw / imageRatio;
+    } else {
+      dh = canvas.height;
       dw = dh * imageRatio;
     }
+
     const dx = (canvas.width - dw) / 2;
     const dy = (canvas.height - dh) / 2;
     cover = { x: dx, y: dy, w: dw, h: dh };
@@ -180,6 +189,69 @@
     layerCtx.restore();
   }
 
+
+  function eraseWithWordTrails(layerCtx) {
+    if (!wordTrails.length) return;
+    layerCtx.save();
+    layerCtx.globalCompositeOperation = 'destination-out';
+    for (const trail of wordTrails) {
+      const gradient = layerCtx.createRadialGradient(trail.x, trail.y, 0, trail.x, trail.y, trail.r);
+      gradient.addColorStop(0, `rgba(0,0,0,${trail.alpha})`);
+      gradient.addColorStop(.62, `rgba(0,0,0,${trail.alpha * .72})`);
+      gradient.addColorStop(1, 'rgba(0,0,0,0)');
+      layerCtx.fillStyle = gradient;
+      layerCtx.beginPath();
+      layerCtx.arc(trail.x, trail.y, trail.r, 0, Math.PI * 2);
+      layerCtx.fill();
+    }
+    layerCtx.restore();
+  }
+
+  function updateFlyingWords() {
+    if (!flyingWords.length) return;
+    let completed = 0;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    wordTrails = [];
+
+    flyingWords.forEach(item => {
+      const local = clamp((knowing - item.trigger) / item.duration);
+      if (local <= 0) return;
+
+      if (!item.started) {
+        const rect = item.source.getBoundingClientRect();
+        item.startX = rect.left + rect.width / 2;
+        item.startY = rect.top + rect.height / 2;
+        item.width = rect.width;
+        item.source.style.width = `${rect.width}px`;
+        item.source.classList.add('is-departing');
+        item.clone.style.display = 'block';
+        item.started = true;
+      }
+
+      // Hold the word clearly in view, then accelerate it beyond the page edge.
+      const eased = local < .16
+        ? Math.sin((local / .16) * Math.PI / 2) * .08
+        : .08 + .92 * Math.pow((local - .16) / .84, 1.55);
+      const sway = Math.sin(local * Math.PI * 2.6 + item.seed) * item.sway * (1 - local * .35);
+      const x = item.startX + item.dx * eased + sway;
+      const y = item.startY - item.rise * eased - Math.sin(local * Math.PI) * 34;
+      const scale = 1 + Math.sin(Math.min(1, local * 2.2) * Math.PI) * .22 + local * .2;
+      item.clone.style.transform = `translate3d(${x}px,${y}px,0) translate(-50%,-50%) rotate(${item.spin * eased}deg) scale(${scale})`;
+      item.clone.style.opacity = String(1 - smoothstep(.90, 1, local));
+      item.clone.style.filter = `blur(${Math.max(0, (local - .90) * 18)}px)`;
+
+      // The departing word triggers the erasure only after its escape is obvious.
+      const eraseWake = smoothstep(.28, .82, local);
+      if (eraseWake > 0) {
+        const radius = (34 + item.width * .38 + eraseWake * 112) * dpr;
+        wordTrails.push({ x: x * dpr, y: y * dpr, r: radius, alpha: (.28 + eraseWake * .62) * eraseWake });
+      }
+      if (local >= 1) completed++;
+    });
+
+    escapeProgress = clamp((completed + wordTrails.length * .42) / flyingWords.length);
+  }
+
   function revealWithMarks(base, reveal, marks, progress) {
     const revealCanvas = document.createElement('canvas');
     revealCanvas.width = canvas.width;
@@ -233,11 +305,16 @@
     const sketch = createLayer(images.sketch);
     const watercolor = createLayer(images.watercolor);
 
-    const eraseProgress = smoothstep(.75, 1.0, knowing);
-    const watercolorProgress = smoothstep(.87, 1.0, knowing);
+    // Scroll choreography:
+    // 0–20%   reality remains untouched
+    // 20–80%  reality slowly erases, revealing the sketch beneath
+    // 60–100% watercolor gradually enters and finishes the transformation
+    const eraseProgress = Math.max(smoothstep(.20, .80, knowing) * .72, escapeProgress);
+    const watercolorProgress = smoothstep(.60, 1.00, knowing);
 
     ctx.drawImage(sketch.layer, 0, 0);
     revealWithMarks(ctx, watercolor.layer, colorMarks, watercolorProgress);
+    eraseWithWordTrails(reality.lctx);
     eraseWithMarks(reality.lctx, eraseMarks, eraseProgress);
     ctx.drawImage(reality.layer, 0, 0);
 
@@ -309,12 +386,51 @@
     });
   }
 
+
+  function prepareFlyingWords() {
+    const rand = seededRandom(928374);
+    const words = [...document.querySelectorAll('.living-word-unit')].filter(word => {
+      const clean = word.textContent.replace(/[^a-zA-Z]/g, '');
+      return clean.length >= 4;
+    });
+    const chosen = [];
+    const desired = Math.min(24, Math.max(14, Math.floor(words.length / 28)));
+    for (let i = 0; i < words.length && chosen.length < desired; i++) {
+      if (rand() < .055) chosen.push(words[i]);
+    }
+    for (let i = 0; chosen.length < desired && i < words.length; i += Math.max(1, Math.floor(words.length / desired))) {
+      if (!chosen.includes(words[i])) chosen.push(words[i]);
+    }
+
+    flyingWords = chosen.slice(0, desired).map((source, index, arr) => {
+      // Only words selected to fly receive the white mist while they wait.
+      source.classList.add('trigger-word');
+      const clone = source.cloneNode(true);
+      clone.className = 'flying-word';
+      clone.style.display = 'none';
+      document.body.appendChild(clone);
+      const base = arr.length === 1 ? .5 : index / (arr.length - 1);
+      return {
+        source, clone, started:false,
+        trigger: .20 + base * .58 + (rand() - .5) * .022,
+        duration: .13 + rand() * .055,
+        dx: (rand() < .5 ? -1 : 1) * innerWidth * (.58 + rand() * .42),
+        rise: innerHeight * (1.18 + rand() * .55),
+        sway: 28 + rand() * 58,
+        spin: (rand() - .5) * 24,
+        seed: rand() * Math.PI * 2,
+        width: 0, startX: 0, startY: 0
+      };
+    }).sort((a,b) => a.trigger - b.trigger);
+  }
+
   function tick() {
     frame++;
     knowing += (targetKnowing - knowing) * .018;
     docCurrent += (docTarget - docCurrent) * .075;
     root.style.setProperty('--knowing', knowing.toFixed(4));
     root.style.setProperty('--presence', ((Math.sin(frame * .012) + 1) / 2).toFixed(4));
+    updateFlyingWords();
     doc.style.transform = `translate3d(0,${-docCurrent}px,0)`;
     progressLabel.textContent = `KNOWING ${String(Math.round(knowing * 100)).padStart(2, '0')}`;
     selectChapter();
@@ -347,6 +463,7 @@
     .then(() => {
       resizeCanvas();
       enlivenText();
+      prepareFlyingWords();
       updateScrollTargets();
       chapters[0].classList.add('is-visible');
       requestAnimationFrame(tick);
