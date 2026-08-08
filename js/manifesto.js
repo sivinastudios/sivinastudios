@@ -109,14 +109,20 @@
     canvas.style.width = `${innerWidth}px`;
     canvas.style.height = `${innerHeight}px`;
 
-    // Full-bleed 3:2 scene. Scale like CSS background-size: cover so the
-    // environment always reaches every edge of the browser with no black bars.
+    // Desktop / landscape stays full-bleed. On portrait phones and small
+    // tablets, prioritize the laptop itself instead: fit the 3:2 master by
+    // width so both sides of the laptop remain visible rather than cropping
+    // them away with a cover-style scale.
     const imageRatio = 1536 / 1024;
     const viewportRatio = canvas.width / canvas.height;
+    const portraitMobile = innerWidth <= 900 && innerHeight > innerWidth;
     let dw;
     let dh;
 
-    if (viewportRatio > imageRatio) {
+    if (portraitMobile) {
+      dw = canvas.width * 0.98;
+      dh = dw / imageRatio;
+    } else if (viewportRatio > imageRatio) {
       dw = canvas.width;
       dh = dw / imageRatio;
     } else {
