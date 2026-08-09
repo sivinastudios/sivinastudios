@@ -347,7 +347,9 @@ body.returning-to-journal .cinematic-bars { display: none; }
 
 .page-frame {
     position: relative;
-    width: min(92vw, 1080px);
+    /* Keep the journal, its controls, and the close button inside short
+       landscape viewports (Chromebooks/laptops) as well as wide desktops. */
+    width: min(92vw, calc(133.333svh - 9.333rem), 1080px);
     aspect-ratio: 4 / 3;
     filter: none;
     transform-style: preserve-3d;
@@ -884,7 +886,7 @@ body.returning-to-journal .cinematic-bars { display: none; }
     .cinematic-bar { height: clamp(38px, 8.5vh, 72px); }
     .quiet-prompt { bottom: 1.5%; font-size: .68rem; }
     .journal-stage { width: 100vw; }
-    .page-frame { width: 98vw; }
+    .page-frame { width: min(98vw, calc(133.333svh - 9.333rem)); }
     .journal-close { top: -2.6rem; right: .6rem; }
     .reader-controls { margin-top: .1rem; gap: .3rem; }
     .reader-controls button { font-size: .78rem; }
