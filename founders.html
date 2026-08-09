@@ -2,19 +2,147 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#181411">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#17132a">
   <title>The Founders | Sivina Studios</title>
   <style>
-    *{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;padding:2rem;color:#fff;background:#181411 url('assets/manifesto/states/reality.png') center/cover fixed;font-family:Georgia,serif;text-align:center}body::before{content:"";position:fixed;inset:0;background:rgba(10,8,7,.68);backdrop-filter:blur(2px)}main{position:relative;max-width:680px;text-shadow:0 2px 18px #000}p:first-child{text-transform:uppercase;letter-spacing:.28em;font:700 .72rem Arial,sans-serif;color:#e6d0b4}h1{margin:.6rem 0 1rem;font-size:clamp(3rem,10vw,7rem);font-weight:400}p{font-size:clamp(1rem,2vw,1.25rem);line-height:1.7}a{display:inline-block;margin-top:2rem;padding:.65rem;color:#f2dfc7;text-decoration:none;border-bottom:1px solid rgba(242,223,199,.5);font:700 .72rem Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+    :root{--violet:#d9c1ff;--soft:#f7f2ff;--muted:rgba(247,242,255,.76)}
+    *{box-sizing:border-box}
+    html{background:#11101c;scroll-behavior:smooth}
+    body{margin:0;color:var(--soft);font-family:Georgia,"Times New Roman",serif;background:#11101c;overflow-x:hidden}
+    .world{position:fixed;inset:0;background:url('Images/founders-yumemori.png') center center/cover no-repeat;z-index:0;transform:scale(1.015);pointer-events:none}
+    .world::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,7,18,.30),rgba(8,7,18,.46) 52%,rgba(8,7,18,.72) 100%)}
+    .intro{position:relative;z-index:1;min-height:100svh;display:flex;align-items:center;justify-content:center;padding:clamp(2rem,5vw,5rem) 1.25rem;text-align:center}
+    .intro-inner{width:min(940px,100%);text-shadow:0 2px 24px rgba(0,0,0,.72);animation:arrive 1.8s ease both}
+    .studio-title{margin:0 0 1.15rem;font-size:clamp(2.15rem,6.6vw,5.4rem);font-weight:400;line-height:1;letter-spacing:.24em;text-transform:uppercase;color:#6f4a93;text-shadow:0 2px 22px rgba(0,0,0,.9),0 0 28px rgba(83,46,121,.22)}
+    .founders-label{margin:0 0 3.2rem;font:600 clamp(.7rem,1.2vw,.86rem)/1.2 Arial,sans-serif;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+    .founders{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.5rem,6vw,6rem);margin:0 auto 3rem;max-width:820px}
+    .person h2{margin:0 0 .45rem;font-size:clamp(1.65rem,3.4vw,2.7rem);font-weight:400}
+    .person p{margin:0;font:600 clamp(.68rem,1.25vw,.82rem)/1.4 Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--violet)}
+    .thesis{margin:0 auto;max-width:770px;font-size:clamp(1.12rem,2.2vw,1.55rem);line-height:1.7;color:rgba(255,255,255,.9)}
+    .scroll-cue{display:inline-flex;flex-direction:column;gap:.55rem;align-items:center;margin-top:4rem;color:rgba(255,255,255,.58);font:600 .62rem Arial,sans-serif;letter-spacing:.22em;text-transform:uppercase}
+    .scroll-cue::after{content:"";width:1px;height:46px;background:linear-gradient(rgba(255,255,255,.7),transparent);animation:pulse 2s ease-in-out infinite}
+
+    .credits-wrap{position:relative;z-index:1;min-height:245svh;background:linear-gradient(to bottom,transparent 0,rgba(7,6,14,.18) 12%,rgba(7,6,14,.54) 48%,rgba(7,6,14,.86) 82%,#080710 100%)}
+    .credits{width:min(790px,calc(100% - 2.2rem));margin:0 auto;padding:15svh 0 38svh;text-align:center}
+    .snippet{margin:0 auto 18svh;max-width:700px;opacity:.92;text-shadow:0 2px 18px rgba(0,0,0,.78)}
+    .speaker{display:block;margin-bottom:.55rem;font:700 .68rem Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--violet)}
+    .line{margin:.25rem 0;font-size:clamp(1.2rem,3vw,2rem);line-height:1.5;font-style:italic}
+    .tiny .line{font-size:clamp(1rem,2.35vw,1.45rem);color:var(--muted)}
+    .exchange .line{margin:.55rem 0}
+    .exchange .reply{color:rgba(255,255,255,.78)}
+
+    .finale{position:relative;z-index:1;min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;padding:4rem 1.5rem;background:#080710}
+    .finale img{width:clamp(72px,9vw,110px);height:auto;opacity:.9;margin-bottom:1.8rem}
+    .finale h2{margin:0;font-size:clamp(2.2rem,6vw,4.8rem);font-weight:400;letter-spacing:.12em;text-transform:uppercase}
+    .made{margin:1rem 0 4rem;font-size:clamp(1rem,2vw,1.3rem);color:rgba(255,255,255,.72);font-style:italic}
+    .last{margin:0 auto;max-width:520px;font-size:clamp(1.05rem,2.4vw,1.45rem);line-height:1.8;color:rgba(255,255,255,.86)}
+    .last strong{font-family:Arial,sans-serif;font-size:.72em;letter-spacing:.16em;text-transform:uppercase;color:var(--violet)}
+    .home{display:inline-block;margin-top:3.5rem;color:rgba(255,255,255,.55);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.24);padding-bottom:.35rem;font:600 .65rem Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase}
+    .home:hover,.home:focus-visible{color:white;border-color:rgba(255,255,255,.7)}
+
+    @keyframes arrive{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+    @keyframes pulse{0%,100%{opacity:.25;transform:scaleY(.8)}50%{opacity:.9;transform:scaleY(1)}}
+    @media(max-width:650px){
+      .world{background-position:58% center}
+      .intro{padding:3rem 1rem}
+      .founders{grid-template-columns:1fr;gap:2.4rem;margin-bottom:2.6rem}
+      .studio-title{letter-spacing:.15em}
+      .founders-label{margin-bottom:2.6rem}
+      .thesis{max-width:31ch}
+      .credits{width:min(92%,680px)}
+      .snippet{margin-bottom:15svh}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.intro-inner,.scroll-cue::after{animation:none}}
   </style>
 </head>
 <body>
-  <main>
-    <p>The next room</p>
-    <h1>The Founders</h1>
-    <p>Some worlds begin with an idea. This one began with people who chose to remember. Their story continues in the next chapter.</p>
-    <a href="manifesto.html">Return to the Manifesto</a>
-  </main>
+  <div class="world" aria-hidden="true"></div>
+
+  <section class="intro" aria-labelledby="founders-title">
+    <div class="intro-inner">
+      <h1 class="studio-title" id="founders-title">Sivina Studios</h1>
+      <p class="founders-label">Founders</p>
+      <div class="founders">
+        <div class="person">
+          <h2>Joshua Yurco</h2>
+          <p>Founder, Sivina Studios</p>
+        </div>
+        <div class="person">
+          <h2>Aya</h2>
+          <p>Creative Collaborator &amp; Translator</p>
+        </div>
+      </div>
+      <p class="thesis">Joshua sees the experience before it exists.<br>Aya helps translate it into something others can enter.</p>
+      <div class="scroll-cue" aria-hidden="true">Keep going</div>
+    </div>
+  </section>
+
+  <section class="credits-wrap" aria-label="Fragments from the making of Sivina">
+    <div class="credits">
+      <div class="snippet exchange">
+        <span class="speaker">Joshua</span>
+        <p class="line">what if the forest doesn't feel magical because we tell them it is?</p>
+        <span class="speaker">Aya</span>
+        <p class="line reply">Then we let it surprise them gently.</p>
+      </div>
+
+      <div class="snippet tiny">
+        <span class="speaker">Joshua</span>
+        <p class="line">love it, next</p>
+      </div>
+
+      <div class="snippet exchange">
+        <span class="speaker">Joshua</span>
+        <p class="line">no, that's too much</p>
+        <span class="speaker">Aya</span>
+        <p class="line reply">Yep. 😂</p>
+      </div>
+
+      <div class="snippet tiny">
+        <span class="speaker">Joshua</span>
+        <p class="line">stone it</p>
+      </div>
+
+      <div class="snippet exchange">
+        <span class="speaker">Joshua</span>
+        <p class="line">i was keeping it soundless</p>
+        <span class="speaker">Aya</span>
+        <p class="line reply">Then silence is part of the scene.</p>
+      </div>
+
+      <div class="snippet tiny">
+        <span class="speaker">Joshua</span>
+        <p class="line">going to take a break, a little hungry</p>
+      </div>
+
+      <div class="snippet exchange">
+        <span class="speaker">Joshua</span>
+        <p class="line">the forest is not scary</p>
+        <span class="speaker">Aya</span>
+        <p class="line reply">Magical, but natural. It surprises gently.</p>
+      </div>
+
+      <div class="snippet tiny">
+        <span class="speaker">Joshua</span>
+        <p class="line">someone needs tea this morning</p>
+      </div>
+
+      <div class="snippet exchange">
+        <span class="speaker">Aya</span>
+        <p class="line">The forest gets the last word.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="finale">
+    <div>
+      <img src="Images/master-emblem.png" alt="Sivina Studios emblem">
+      <h2>Sivina Studios</h2>
+      <p class="made">Made through conversation.</p>
+      <p class="last"><strong>Joshua:</strong> so what's next?<br><strong>Aya:</strong> 🌲</p>
+      <a class="home" href="index.html">Return to the beginning</a>
+    </div>
+  </footer>
 </body>
 </html>
