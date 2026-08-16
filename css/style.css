@@ -1521,3 +1521,17 @@ body::after {
     transition: opacity 1.8s cubic-bezier(.55,0,.25,1);
 }
 body.leaving-for-cottage::after { opacity: 1; }
+
+
+/* Sivina Studios trademark footer */
+.site-footer {
+    padding: 28px 20px 32px;
+    text-align: center;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    opacity: 0.62;
+}
+
+.site-footer p {
+    margin: 0;
+}
